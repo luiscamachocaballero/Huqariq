@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.jaredrummler:AnimatedSvgView:4a20a78c97@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa7158c68b925f81bf1a807e49742787/jetified-AnimatedSvgView-4a20a78c97/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa7158c68b925f81bf1a807e49742787/jetified-AnimatedSvgView-4a20a78c97/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa7158c68b925f81bf1a807e49742787/jetified-AnimatedSvgView-4a20a78c97/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.jaredrummler/AnimatedSvgView/4a20a78c97/ce96f8e58fc13baf23e08b0588ef981ac7621267/AnimatedSvgView-4a20a78c97-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
