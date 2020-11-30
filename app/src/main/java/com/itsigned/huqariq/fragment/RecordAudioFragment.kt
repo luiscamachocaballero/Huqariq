@@ -1,9 +1,11 @@
 package com.itsigned.huqariq.fragment
 
 import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,7 @@ import com.itsigned.huqariq.R
 import com.itsigned.huqariq.bean.User
 import com.itsigned.huqariq.database.DataBaseService
 import com.itsigned.huqariq.helper.PermissionHelper
+import com.itsigned.huqariq.helper.REQUEST_PERMISION_AUDIO
 import com.itsigned.huqariq.helper.SystemFileHelper
 import com.itsigned.huqariq.player.MediaPlayerHolder
 import com.itsigned.huqariq.player.MediaRecordHolder
@@ -56,7 +59,7 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
         initializeSeekbar(view)
         initializeSeekbarRecord(view)
         initializePlaybackController()
-        PermissionHelper.recordAudioPermmision(context!!,null)
+        PermissionHelper.recordAudioPermmision(context!!,this)
         index=user.avance
         initButton(view)
         view.audioRecord.visibility=View.GONE
@@ -71,7 +74,7 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
         val codeName=SystemFileHelper.getNameCodeFile(PREFIX_FILE_AUDIO_DOWNLOAD,EXTENSION_WAV)
         RafiServiceWrapper.downloadFile(context!!,URL_CHANCA, FOLDER_AUDIO_DOWNLOAD, codeName,
                 {
-                    mPlayerAdapter?.loadMediaFromPath(SystemFileHelper.getPathFile("audio_huawariq",codeName))
+                    mPlayerAdapter?.loadMediaFromPath(SystemFileHelper.getPathFile(FOLDER_AUDIO_DOWNLOAD,codeName))
                     deleteRecord()
                     progress.dismiss()
                 },
@@ -278,5 +281,15 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
     override fun changePositionSeek(pos: Int) {
         if (mUserIsSeeking) return
         seekbarExample.progress = pos
+    }
+
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+      Log.d("request permission","ddsds")
+        when(requestCode){
+            REQUEST_PERMISION_AUDIO->getAudioWebService()
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
