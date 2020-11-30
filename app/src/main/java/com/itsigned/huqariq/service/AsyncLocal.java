@@ -6,9 +6,6 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.itsigned.huqariq.bean.User;
-import com.itsigned.huqariq.client.GetUserByCorreoClient;
-import com.itsigned.huqariq.client.RegistrarUsuarioClient;
-import com.itsigned.huqariq.client.SendFileClient;
 import com.itsigned.huqariq.database.DataBaseService;
 import com.itsigned.huqariq.util.Util;
 
@@ -45,30 +42,6 @@ public class AsyncLocal {
     }
     public void isUserRegister(final User user, final Context context){
 
-        GetUserByCorreoClient getUserByCorreoClient=new GetUserByCorreoClient(context, new GetUserByCorreoClient.VerificarUsuarioListener() {
-            @Override
-            public void onSuccess(User userRegister) {
-                Log.d("tag","user previous register "+user.getEmail());
-
-                Log.d("tag","init send list file "+user.getEmail());
-
-                sendListAudio(userRegister.getEmail());
-
-            }
-
-            @Override
-            public void notExist() {
-                registerUser(user,context);
-
-            }
-
-            @Override
-            public void onError(String message) {
-
-            }
-        });
-
-        getUserByCorreoClient.userByEmail(user.getEmail());
 
 
     }
@@ -76,21 +49,7 @@ public class AsyncLocal {
 
 
     private void registerUser(User user,Context context){
-        RegistrarUsuarioClient registrarUsuarioClient=new RegistrarUsuarioClient(context, new RegistrarUsuarioClient.RegistrarUsuarioCorreoListener() {
-            @Override
-            public void onSuccess(User user) {
-                Log.d("tag","init send list file "+user.getEmail());
-                sendListAudio(user.getEmail());
 
-            }
-
-            @Override
-            public void onError(String message) {
-
-            }
-        });
-
-        registrarUsuarioClient.insertarusuarioPorCorreo(user);
 
 
     }
@@ -108,25 +67,13 @@ public class AsyncLocal {
 
     private void sendIndividualAudio(final String  nameFile){
 
-        SendFileClient sendFileClient=new SendFileClient(context, new SendFileClient.SendFileClientListener() {
-            @Override
-            public void onSuccess() {
-                DataBaseService.getInstance(context).updateFileAudio(nameFile);
 
-            }
-
-            @Override
-            public void onError(String message) {
-
-            }
-        });
         File file = new File(context.getFilesDir(), nameFile    );
 
         Log.d("tag","file zise"+file.getAbsolutePath());
         Log.d("tag","file zise"+file.getTotalSpace());
         Log.d("tag","file zise"+file.getName());
 
-        sendFileClient.uploadFile(getBytes(file),nameFile);
     }
 
 

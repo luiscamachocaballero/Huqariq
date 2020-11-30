@@ -44,7 +44,6 @@ dependencies {
 
     implementation 'com.devlomi.record-view:record-view:2.0.1'
 
-    compile 'com.android.volley:volley:1.0.0'
     compile 'com.github.jaredrummler:AnimatedSvgView:4a20a78c97'
     implementation 'com.github.apl-devs:appintro:v4.2.3'
     testImplementation 'junit:junit:4.12'
