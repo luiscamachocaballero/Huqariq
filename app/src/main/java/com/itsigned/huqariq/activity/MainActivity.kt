@@ -15,7 +15,10 @@ class MainActivity : AppCompatActivity() {
 
     private var idCurrentFragment: Int = -1
 
-
+    /**
+     * Metodo para la creación de activitys
+     * @param savedInstanceState Bundle con información de la actividad previa
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,8 +45,6 @@ class MainActivity : AppCompatActivity() {
                     showDialogCloseSession()
                     null
                 }
-
-
                 else -> null
             }
             fragment.toString()
@@ -54,17 +55,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
-
+    /**
+     * Metodo para setear el fragmento por defecto
+     */
     private fun defaultFragment() {
         val fragmentToView = RecordAudioFragment()
         transitionFragment(fragmentToView)
         bottomNavigation.selectedItemId = 0
-
     }
 
-
+    /**
+     * Metodo para transicionar el fragmento dado
+     * @param fragment el fragmento a transicionar
+     * @return un boleano indicando el exito de la transacción
+     */
     private fun transitionFragment(fragment: Fragment?): Boolean {
         if (fragment == null) return false
         val transaction = supportFragmentManager.beginTransaction()
@@ -74,7 +78,9 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-
+    /**
+     * Método que muestra un dialogo para cerrar la sesión
+     */
     private fun showDialogCloseSession(){
 
         val builder1 = AlertDialog.Builder(this)

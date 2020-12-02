@@ -43,6 +43,8 @@ const val STATUS_NUMBERDOCUMENT_NOT_CALL_SERVICE=0
 const val STATUS_NUMBERDOCUMENT_GREEN=1
 const val STATUS_NUMBERDOCUMENT_RED=2
 const val STATUS_NUMBERDOCUMENT_LOADING=3
+
+
 class RegisterActivity : AppCompatActivity() {
 
     private var listaDepartamento: ArrayList<Ubigeo>? = null
@@ -55,6 +57,11 @@ class RegisterActivity : AppCompatActivity() {
     private var statusNumberDocument:Int=0
     private var listLanguage:ArrayList<Language>?=null
 
+
+    /**
+     * Metodo para la creación de activitys
+     * @param savedInstanceState Bundle con información de la actividad previa
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -73,7 +80,10 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Metodo que llama un webservice para validar el número de documento
+     * @param numberDocument número de documento a validar
+     */
     private fun validateNumberDocumentWithServer(numberDocument: String) {
         if (!ValidationHelper.validateIdentifyNumber(numberDocument)) {
             ViewHelper.showOneView(errorNumberDocumentImageView,validNumberDocumentStatusFrame)
@@ -92,7 +102,10 @@ class RegisterActivity : AppCompatActivity() {
         )
     }
 
-
+    /**
+     * Metodo para validar el correo electrónico
+     * @param mail correo a validar
+     */
     private fun validMail(mail:String){
         if (!ValidationHelper.validateMail(mail)) {
             ViewHelper.showOneView(errorMailImageView,validMailStatusFrame)
@@ -112,6 +125,11 @@ class RegisterActivity : AppCompatActivity() {
         )
     }
 
+
+    /**
+     * Metodo para verificar la respuesta del webService que valida correos
+     * @param verification respuesta del webService
+     */
     private fun evaluateVerificationServerMail(verification: String) {
         statusMail = if (verification.toUpperCase(Locale.ROOT)=="OK"){
             ViewHelper.showOneView(checkMailImageView,validMailStatusFrame)
@@ -123,6 +141,10 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Metodo para evaluar la respuesta del webservice que evalua el DNI
+     * @param info respuesta del webservice de validación de DNI
+     */
     private fun evaluateDni(info:ResponseValidateDni?) {
         if(info==null|| info.name==null){
             ViewHelper.showOneView(errorNumberDocumentImageView,validNumberDocumentStatusFrame)
@@ -137,16 +159,22 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Método para llenar los spinner iniciales y configurar sus eventos
+     */
     private fun configureSpinner(){
         spDepartamento.onItemSelectedListener =   getListenerSpinner { position->spinnerItemSelectedDepartamento(position) }
         spProvincia.onItemSelectedListener = getListenerSpinner { position->spinnerItemSelectProvincia(position) }
         spDistrito.onItemSelectedListener = getListenerSpinner { position->spinnerItemSelectDistrito(position) }
         val departamentoAdapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listaDepartamento!!.toMutableList())
         spDepartamento.adapter = departamentoAdapter
-    fillListLanguage()
+        fillListLanguage()
     }
 
+
+    /**
+     * Método que invoca un webservice para obtener los dialectos para el registro
+     */
     private fun fillListLanguage(){
         val progress = Util.createProgressDialog(this, "Cargando")
         progress.show()
@@ -163,6 +191,10 @@ class RegisterActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Método que devuelve un listener génerico para los registros
+     * @return Listener Génerico para el registro
+     */
     private fun getListenerSpinner(itemSelect: (position: Int) -> Unit): AdapterView.OnItemSelectedListener {
         return object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -172,6 +204,10 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Metodo que indica la acción a realizar cuando se selecciona un departamento
+     * @param position posicion de la lista del departamento seleccionado
+     */
     private fun spinnerItemSelectedDepartamento(position: Int) {
         val ubigeo = spDepartamento.getItemAtPosition(position) as Ubigeo
         departamento = ubigeo.nombre
@@ -181,6 +217,10 @@ class RegisterActivity : AppCompatActivity() {
         spProvincia.adapter = provinciaAdapter
     }
 
+    /**
+     * Metodo que indica la acción a realizar cuando se selecciona una provincia
+     * @param position posicion de la lista de la provincia seleccionada
+     */
     private fun spinnerItemSelectProvincia(position: Int) {
         val ubigeo = spProvincia.getItemAtPosition(position) as Ubigeo
         provincia = ubigeo.nombre
@@ -191,6 +231,10 @@ class RegisterActivity : AppCompatActivity() {
         btnSignup.setOnClickListener { registrarUser() }
     }
 
+    /**
+     * Metodo que indica la acción a realizar cuando se selecciona una provincia
+     * @param position posicion de la lista de la provincia seleccionada
+     */
     private fun spinnerItemSelectDistrito(position: Int) {
         val ubigeo = spProvincia.getItemAtPosition(position) as Ubigeo
         distrito = departamento + "/" + provincia + "/" + ubigeo.nombre
@@ -208,7 +252,10 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Metodo que valida los datos del registro de usuario, si son correctos invoca un metodo para registrar al usuario,
+     * caso contrario marca el error en la vista
+     */
     private fun registrarUser() {
         if(statusMail!= STATUS_MAIL_GREEN){
             showError(etEmail, getString(R.string.registro_message_error_correo_electronico_invalido))
@@ -228,7 +275,9 @@ class RegisterActivity : AppCompatActivity() {
         registrar()
     }
 
-
+    /**
+     * Metodo para registrar el usuario mediante un Webservice
+     */
     private fun registrar() {
         val usuario = User()
         usuario.firstName = etName.text.toString()
@@ -245,6 +294,10 @@ class RegisterActivity : AppCompatActivity() {
         registerByServiceWeb(usuario)
     }
 
+    /**
+     * Metodo que invoca el webService para registrar el usuario
+     * @param user objeto del tipo Usuario con la información del usuario
+     */
     private fun registerByServiceWeb(user:User){
         val progress = Util.createProgressDialog(this, "Cargando")
         progress.show()
@@ -257,7 +310,10 @@ class RegisterActivity : AppCompatActivity() {
         })
     }
 
-
+    /**
+     * Metodo para autenticar un usuario
+     * @param user datos del usuario a autentificar
+     */
     private fun verifyLoginExtern(user: User) {
         val progress = Util.createProgressDialog(this, "Cargando")
         progress.show()
@@ -271,6 +327,9 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Metodo para crear una sesión del usuario y llevarlo a la vista principal
+     */
     private fun createSession(user: User){
         SessionManager.getInstance(baseContext).createUserSession(user)
         user.userExternId = 0
@@ -284,6 +343,13 @@ class RegisterActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
+    /**
+     * Metodo para obtener los ubigeos de la base de datos interna
+     * @param typeUbigeo=Tipo de ubigeo
+     * @param idDepartamento=Id del departamento a obtener
+     * @param idProvincia Id de la provincia
+     * @param getUbigeo lambda con donde se coloca la acción a realizar cuando se obtuvo exito en la consulta
+     */
     private fun wrapperQueryDataBase(typeUbigeo:Int,idDepartamento:Int=0,idProvincia:Int=0,getUbigeo: (listUbigeo:  ArrayList<Ubigeo>? ) -> Unit){
         val dataBaseService = DataBaseService.getInstance(this)
         try {

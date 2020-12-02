@@ -11,10 +11,23 @@ class SystemFileHelper {
 
     companion object {
 
+        /**
+         * Metodo para obtener la ruta de un archivo
+         * @param nameDirectory nombre del directorio donde se debe buscar
+         * @param nameFile nombre del archivo a busrcar
+         */
         fun getPathFile(nameDirectory: String, nameFile: String): String {
             return "${Environment.getExternalStorageDirectory().absolutePath}/$nameDirectory/$nameFile"
         }
 
+
+        /**
+         * Metodo para escribir una respuesta de web en un archivo
+         * @param context contexto a usar
+         * @param body responseBody con información stream a guardar
+         * @param nameDirectory directorio donde se guardara el achivo a escribir
+         * @param nameFile nombre del archivo a escribir
+         */
         fun writeResponseBodyToDisk(context: Context, body: ResponseBody, nameDirectory:String, nameFile:String): Boolean {
             createDirectory(nameDirectory)
             try {
@@ -50,6 +63,10 @@ class SystemFileHelper {
 
         }
 
+        /**
+         * Metodo utiliatario  para crear un directorio
+         * @param nameDirectory nombre del directorio a crear
+         */
         fun createDirectory(nameDirectory: String): File {
             val folder = File(Environment.getExternalStorageDirectory().absolutePath + File.separator + nameDirectory)
             if (!folder.exists()) {
@@ -57,6 +74,13 @@ class SystemFileHelper {
             }
             return folder
         }
+
+
+        /**
+         * Metodo utiliatario  para generar nombres de archivos unicos
+         * @param prefix prefijo del nombre del archivo
+         * @param extension extension del archivo
+         */
         fun getNameCodeFile(prefix: String, extension: String): String {
             return "$prefix${Date().time}.$extension"
         }

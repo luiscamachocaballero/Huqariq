@@ -19,6 +19,7 @@ fun AppCompatActivity.goToActivity(cl:Class<*> = MainActivity::class.java, finis
 }
 
 
+
 fun AppCompatActivity.hasErrorEditTextEmpty(editText: EditText, idMessage:Int):Boolean{
     if(editText.text.toString().compareTo(Constants.VACIO)==0){
         showError(editText, getString(idMessage))
@@ -27,10 +28,19 @@ fun AppCompatActivity.hasErrorEditTextEmpty(editText: EditText, idMessage:Int):B
     return false
 }
 
+/**
+ * Metodo para mostrar un toast
+ * @param message mensaje a mostrar en el toast
+ */
 fun AppCompatActivity.showMessage(message:String){
     Toast.makeText(this,message,Toast.LENGTH_LONG).show()
 }
 
+/**
+ * Metodo para mostrar un error en un editText
+ * @param editText edittext donde se mostrara el error
+ * @param message mensaje de error a mostrar
+ */
 fun AppCompatActivity.showError(editText: EditText, message: String) {
     editText.error = null
     Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
@@ -39,6 +49,9 @@ fun AppCompatActivity.showError(editText: EditText, message: String) {
     editText.requestFocus()
 }
 
+/**
+ * Metodo que coloca un toolbar en un activity
+ */
 fun AppCompatActivity.setupToolbar() {
     val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
     setSupportActionBar(toolbar)
@@ -50,6 +63,12 @@ fun AppCompatActivity.setupToolbar() {
 
 class ViewHelper {
     companion object{
+
+        /**
+         * Metodo para mostrar una vista y ocultar las restantes
+         * @param viewToShow vista a mostrar
+         * @param parent contenedor de vistas
+         */
         fun showOneView(viewToShow: View, parent: View){
             for (index in 0 until (parent as ViewGroup).childCount) {
                 val nextChild = parent.getChildAt(index)
@@ -58,11 +77,12 @@ class ViewHelper {
             viewToShow.visibility= View.VISIBLE
         }
 
-        fun showHide(viewToShow:View,viewToHide:View){
-            viewToShow.visibility=View.VISIBLE
-            viewToHide.visibility=View.GONE
-        }
 
+        /**
+         * Metodo para setear como no modificable un editText
+         * @param editText editText a modificar
+         * @param value valor a colocar en el editText
+         */
         fun setEditTextNotModify(editText:EditText,value:String){
             editText.setText(value)
             editText.isEnabled=false

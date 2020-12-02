@@ -13,9 +13,21 @@ import okhttp3.RequestBody
 
 const val TAG = "RafiServiceWrapper"
 const val CONTENT_TYPE_JSON="application/json"
+
+/**
+ * Clase con metodos para invocar webService
+ */
 class RafiServiceWrapper {
 
     companion object{
+
+        /**
+         * Metodo para invocar al servicio de logueo de usuario
+         * @param context contexto de la aplicacion
+         * @param body cuerpo de la peticion, contiene el usuario y password para el logueo
+         * @param onSuccess metodo para invocar si la peticion al servicio es exitosa
+         * @param onError metodo para invocar si la peticion es erronea
+         */
         fun loginUser(context: Context, body: LoginRequestDto, onSuccess: (success: LoginUserDto) -> Unit, onError: (error: String) -> Unit) {
             Log.d(TAG,"execute service loginUser whith")
             Log.d(TAG,body.toString())
@@ -32,6 +44,13 @@ class RafiServiceWrapper {
                     )
         }
 
+
+        /**
+         * Metodo para obtener los dialectos del servicio web
+         * @param context contexto de la aplicacion
+         * @param onSuccess metodo para invocar si la peticion al servicio es exitosa
+         * @param onError metodo para invocar si la peticion es erronea
+         */
         fun getLanguage(context: Context, onSuccess: (success: List<Language>) -> Unit, onError: (error: String) -> Unit) {
             val apiService = RafiService.create()
             Log.d(TAG,"execute service getLanguage")
@@ -47,6 +66,13 @@ class RafiServiceWrapper {
                     )
         }
 
+        /**
+         * Metodo para invocar al servicio de registro de usuario
+         * @param context contexto de la aplicacion
+         * @param body cuerpo de la peticion, contiene los datos de registro
+         * @param onSuccess metodo para invocar si la peticion al servicio es exitosa
+         * @param onError metodo para invocar si la peticion es erronea
+         */
         fun registerUser(context: Context, body: RegisterUserDto, onSuccess: (success: RegisterUserDto) -> Unit, onError: (error: String) -> Unit) {
             val apiService = RafiService.create()
             Log.d(TAG,"execute service register whith")
@@ -63,6 +89,13 @@ class RafiServiceWrapper {
                     )
         }
 
+        /**
+         * Metodo para invocar al servicio de validación de DNI
+         * @param context contexto de la aplicacion
+         * @param body cuerpo de la peticion, contiene los datos de DNI
+         * @param onSuccess metodo para invocar si la peticion al servicio es exitosa
+         * @param onError metodo para invocar si la peticion es erronea
+         */
         fun validateDni(context: Context, body: RequestValidateDni, onSuccess: (success: ResponseValidateDni) -> Unit, onError: (error: String) -> Unit) {
             val apiService = RafiService.create()
             Log.d(TAG,"execute service register whith")
@@ -82,6 +115,13 @@ class RafiServiceWrapper {
                     )
         }
 
+        /**
+         * Metodo para invocar al servicio de validación de correo
+         * @param context contexto de la aplicacion
+         * @param body cuerpo de la peticion, contiene los datos de correo
+         * @param onSuccess metodo para invocar si la peticion al servicio es exitosa
+         * @param onError metodo para invocar si la peticion es erronea
+         */
         fun verifyMail(context: Context, body: RequestValidateMail, onSuccess: (success: String) -> Unit, onError: (error: String) -> Unit) {
             val apiService = RafiService.create()
             Log.d(TAG,"execute service verifyMail whith")
@@ -98,6 +138,14 @@ class RafiServiceWrapper {
                     )
         }
 
+        /**
+         * Metodo para invocar al servicio de subir un arhivo de audio
+         * @param fileName nombre del archivo de audio
+         * @param requestBody cuerpo de la peticion, contiene los datos del archivo de audio
+         * @param context contexto de la aplicación
+         * @param onSuccess metodo para invocar si la peticion al servicio es exitosa
+         * @param onError metodo para invocar si la peticion es erronea
+         */
     fun uploadAudio(fileName:String, requestBody: RequestBody, context: Context,
                     onSuccess: () -> Unit, onError: (error: String?) -> Unit) {
         Log.d(TAG,"execute service uploadAudio whith")
@@ -116,6 +164,15 @@ class RafiServiceWrapper {
                 )
     }
 
+        /**
+         * Metodo para invocar al servicio de descargar un audio de muestra
+         * @param context contexto de la aplicación
+         * @param url url del audio a descargar
+         * @param nameDirectory nombre del directorio donde se guardará el archivo descargado
+         * @param nameFile nombre con el cual se guardará el archivo descargado
+         * @param onSuccess metodo para invocar si la peticion al servicio es exitosa
+         * @param onError metodo para invocar si la peticion es erronea
+         */
     fun downloadFile(context: Context, url: String, nameDirectory: String, nameFile: String,
                      onSuccess: () -> Unit, onError: (error: String?) -> Unit) {
         Log.d(TAG, "execute service download  whith url $url")

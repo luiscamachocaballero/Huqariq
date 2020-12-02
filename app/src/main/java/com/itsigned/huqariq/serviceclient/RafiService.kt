@@ -15,6 +15,10 @@ import retrofit2.http.*
 import java.util.concurrent.TimeUnit
 
 const val TIME_OUT_MINUTE=3
+
+/**
+ * clase con la interface del Retrofit
+ */
 interface RafiService {
 
     @POST("/account_app")

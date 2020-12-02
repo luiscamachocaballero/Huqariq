@@ -1,11 +1,8 @@
 package com.itsigned.huqariq.fragment
 
 import android.app.AlertDialog
-import android.content.pm.PackageManager
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +12,6 @@ import androidx.fragment.app.Fragment
 import com.devlomi.record_view.OnRecordListener
 import com.itsigned.huqariq.R
 import com.itsigned.huqariq.bean.User
-import com.itsigned.huqariq.database.DataBaseService
 import com.itsigned.huqariq.helper.PermissionHelper
 import com.itsigned.huqariq.helper.REQUEST_PERMISION_AUDIO
 import com.itsigned.huqariq.helper.SystemFileHelper
@@ -47,15 +43,18 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
     private lateinit var seekbarExample:SeekBar
     private lateinit var seekbarRecord:SeekBar
     private var index=0
-    private lateinit var fileName:String
     private var frameAnimation: AnimationDrawable? = null
-    lateinit var user: User
+    private lateinit var user: User
 
-
+    /**
+     * Sobreescritura del metodo onCreateView
+     * @param inflater clase para inflar el layout
+     * @param container contenedor de la vista
+     * @param savedInstanceState bundle con información del activity previo
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_record_audio, container, false)
         user=SessionManager.getInstance(activity).userLogged
-        fileName=Util.getFileName(user.codeDepartamento)
         initializeSeekbar(view)
         initializeSeekbarRecord(view)
         initializePlaybackController()
@@ -68,6 +67,9 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
         return view
     }
 
+    /**
+     * Metodo que descarga el audio de muestra desde un WebService
+     */
     private fun getAudioWebService(){
         val progress = Util.createProgressDialog(context, "Cargando")
         progress.show()
@@ -85,6 +87,11 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
         )
     }
 
+
+    /**
+     * Metodo para la configuración inicial de  la vista view Record
+     * @param view vista del layout actual
+     */
     private fun configureFunctionAudio(view:View){
         view.record_view.setOnRecordListener(object: OnRecordListener {
             override fun onFinish(recordTime: Long) {finishRecordAudio()}
@@ -97,16 +104,22 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
         view.buttonNextAudio.setOnClickListener { getAudioWebService() }
     }
 
+
+    /**
+     * Metodo para detener la grabacíón del audio del usuario
+     */
     private fun finishRecordAudio(){
         mediaRecordHolder!!.stopRecord()
         startRecordButton.visibility=View.GONE
         buttonSendAudio.visibility=View.VISIBLE
     }
 
+    /**
+     * Metodo para cancelar la grabación del audio del Holder
+     */
     private fun cancelRecordAudio(){
         mediaRecordHolder!!.cancelRecord()
         stopAnimation()
-       // deleteRecord()
     }
 
     private fun initButton(view:View){
@@ -129,6 +142,9 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
         view.ivCloseRecord.setOnClickListener { this.dialogClose() }
     }
 
+    /**
+     * Metodo que invoca un servicio web para enviar el audio grabado por el usuario
+     */
     private fun sendAudio(){
         val requestBody = RequestBody.create(null,audioFile!! )
         RafiServiceWrapper.uploadAudio(audioFile!!.name,requestBody,context!!,
@@ -164,6 +180,10 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
     }
 
 
+    /**
+     * Metodo para inicializar los Seekbar de reproduccion de audio de muestra
+     * @param view view con información del layout
+     */
     private fun initializeSeekbar(view:View) {
         seekbarExample=view.seekbarAudioExample
         view.seekbarAudioExample.setOnSeekBarChangeListener(
@@ -183,7 +203,10 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
                 })
     }
 
-
+    /**
+     * Metodo para inicializar los Seekbar de reproduccion de audio de grabación
+     * @param view view con información del layout
+     */
     private fun initializeSeekbarRecord(view:View) {
         seekbarRecord=view.seekbarAudioRecord
         view.seekbarAudioRecord.setOnSeekBarChangeListener(
@@ -206,16 +229,21 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
     }
 
 
-
-
-
+    /**
+     * Metodo que se activa cada vez que se cambia la posicion del SeekBar
+     * @param positon nueva posición del seekbar
+     */
     override fun onPositionChanged(positon: Int) {
         if (!mUserIsSeeking) seekbarExample.progress = positon
         if (view!=null)showHiddenControlMedia(view!!.ibPlayRecord,view!!.ibPauseRecord,false)
     }
 
+
     override fun onDurationChanged(duration: Int) { seekbarExample.max = duration }
 
+    /**
+     * Metodo para iniciar la grabación de un adio
+     */
     fun recordAudio(){
         val permisionRecordAudio=PermissionHelper.recordAudioPermmision(context!!,null)
         if(!permisionRecordAudio) return
@@ -223,8 +251,10 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
         mediaRecordHolder?.initRecord(SessionManager.getInstance(activity).userLogged.dni,index,context!!)
     }
 
+    /**
+     * Metodo para mostrar un cuadro de confirmación para eliminar el audio grabado
+     */
     private fun dialogClose(){
-
         val builder1 =  AlertDialog.Builder(this.context!!)
         builder1.setMessage("¿Desea eliminar la grabación?")
         builder1.setCancelable(true)
@@ -232,35 +262,35 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
         builder1.setNegativeButton("No") { dialog, _ ->dialog.cancel()}
         val alert11 = builder1.create()
         alert11.show()
-
     }
 
+    /**
+     * Metodo para reiniciar la vista de grabación luego de eliminar el audio grabado
+     */
     private fun deleteRecord(){
         buttonSendAudio.visibility=View.GONE
         audioRecord.visibility=View.GONE
         startRecordButton.visibility=View.VISIBLE
         buttonSendAudio.visibility=View.GONE
-        val dataBaseService=DataBaseService.getInstance(activity)
-        dataBaseService.deleteAudio(user.email,index)
-
-
     }
 
 
-    override fun finishRecord(pathAudio: String) {
+    /**
+     * Metodo para guardar la grabación de audio en un archivo
+     * @param nameAudio ruta del archivo donde se va a guardar la grabación
+     */
+    override fun finishRecord(nameAudio: String) {
         stopAnimation()
         audioRecord.visibility=View.VISIBLE
-        val fileName=pathAudio.replace(Environment.getExternalStorageDirectory().absolutePath + "/game_catolic_quechua/","")
-        audioFile = File(pathAudio)
+        audioFile = File(nameAudio)
         Util.copyFileUsingStream(audioFile,context)
-        mediaPlayerHolderForRecord?.loadMediaFromPath(pathAudio)
-        val dataBaseService=DataBaseService.getInstance(activity)
-        dataBaseService.insertAudio(user.email,index,fileName)
-
-
+        mediaPlayerHolderForRecord?.loadMediaFromPath(nameAudio)
     }
 
 
+    /**
+     * Metodo para iniciar la animación de audio
+     */
     private fun initAnimation() {
         audioRecord.visibility=View.GONE
         cardAnimation.visibility=View.VISIBLE
@@ -270,23 +300,38 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
         frameAnimation?.start()
     }
 
+    /**
+     * Metodo para ocultar la animación de audio
+     */
     private fun stopAnimation() {
         cardAnimation.visibility=View.GONE
         frameAnimation?.stop()
         ivAnimation.visibility = View.GONE
     }
 
+    /**
+     * Metodo para reiniciar el controlador de audio
+     */
     override fun reinitAudio() { showHiddenControlMedia( ibPlay,ibPause,false) }
 
+
+    /**
+     * Metodo para mover la posicion de la barra Seek
+     * @param pos posiciion de la barra seek a donde se va a mover [ 0 - 100 ]
+     */
     override fun changePositionSeek(pos: Int) {
         if (mUserIsSeeking) return
         seekbarExample.progress = pos
     }
 
 
-
+    /**
+     * Sobreescritura del metodo onRequestPermissionsResult para evaluar los resultados de las solicitudes de permisos
+     * @param requestCode codigo de solicitud de permisos
+     * @param permissions codigo de respuesta de solicitud de permisos
+     * @param grantResults resultados individuales de los permisos
+     */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-      Log.d("request permission","ddsds")
         when(requestCode){
             REQUEST_PERMISION_AUDIO->getAudioWebService()
         }

@@ -52,17 +52,24 @@ public class DataBaseService extends SQLiteOpenHelper {
         super(context, NOMBRE_BASEDATOS, null, VERSION_BASEDATOS);
     }
 
+    /**
+     * Sobreescritura del metodo onUpgrade, para ejecutar las actualizaciones de querys de base de datos
+     * @param db  antigua base de datos
+     * @param versionAnterior ultima version previa
+     * @param versionNueva version actual
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int versionAnterior, int versionNueva) {
         db.execSQL("drop table "+ TABLE_USER);
         db.execSQL("drop table "+TABLE_UBIGEO);
         db.execSQL("drop table "+TABLE_AUDIOS);
-
-
         onCreate(db);
-
     }
 
+    /**
+     * Sobreescritura del metodo onCreate
+     * @param db objeto que representa la actual base de datos
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -77,14 +84,6 @@ public class DataBaseService extends SQLiteOpenHelper {
         db.execSQL(instructionUbigeosEight());
 
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -127,214 +126,24 @@ public class DataBaseService extends SQLiteOpenHelper {
     }
 
 
-    public List<String> getListAudioNotSend(String correo){
 
-        SQLiteDatabase db = getWritableDatabase();;
-        String sql=("select NAME_FILE FROM ") .concat(TABLE_AUDIOS).concat(" where EMAIL_USER='")
-                .concat(correo.trim()).concat("'")
-                .concat(" and IS_SEND=0 group by NAME_FILE");
-        Cursor cursor = db.rawQuery(sql, null);
-        List<String> listAudio=new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            do {
-                listAudio.add(cursor.getString(0));
-
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-
-        return listAudio;
-
-    }
-
-    public void updateFileAudio(String file){
-
-        SQLiteDatabase db = getWritableDatabase();
-
-        ContentValues valores = new ContentValues();
-        valores.put("IS_SEND",1);
-        db.update(TABLE_AUDIOS, valores, "NAME_FILE='".concat(file+"'"), null);
-
-
-    }
-
-
-
-    public User getUserByPassEmail(String correo,String pass) throws ParseException {
-        SQLiteDatabase db = getWritableDatabase();;
-        String sql=("select ID_USER_LOCAL,ID_USER_EXTERN ,EMAIL ,PHONE, DNI," +
-                "PASSWORD,NAME,LASTNAME,CODE_DEPARTAMENTO,CODE_PROVINCIA," +
-                "CODE_DISTRITO,AVANCE FROM ") .
-                concat(TABLE_USER).concat(" where EMAIL='").concat(correo.trim()).concat("'")
-                .concat(" and PASSWORD='").concat(pass.trim()).concat("'");
-        Cursor cursor = db.rawQuery(sql, null);
-        User user = null;
-        if (cursor.moveToFirst()) {
-            do {
-                user = new User();
-                user.setUserLocalId(cursor.getLong(0));
-                user.setUserExternId(cursor.getLong(1));
-
-                user.setEmail(cursor.getString(2));
-                user.setPhone(cursor.getString(3));
-                user.setDni(cursor.getString(4));
-                user.setPassword(cursor.getString(5));
-                user.setFirstName(cursor.getString(6));
-                user.setLastName(cursor.getString(7));
-                user.setCodeDepartamento(cursor.getInt(8));
-                user.setCodeProvincia(cursor.getInt(9));
-                user.setCodeDistrito(cursor.getInt(10));
-                user.setAvance(cursor.getInt(11));
-                return user;
-
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-
-
-
-
-
-
-        return user;
-
-    }
-
-
-    public List<User> getAllUser() {
-        List<User> listaUser=new ArrayList<>();
-        SQLiteDatabase db = getWritableDatabase();;
-        String sql=("select ID_USER_LOCAL,ID_USER_EXTERN ,EMAIL ,PHONE, DNI," +
-                "PASSWORD,NAME,LASTNAME,CODE_DEPARTAMENTO,CODE_PROVINCIA," +
-                "CODE_DISTRITO,AVANCE FROM ") .
-                concat(TABLE_USER);
-        Cursor cursor = db.rawQuery(sql, null);
-        User user = null;
-        if (cursor.moveToFirst()) {
-            do {
-                user = new User();
-                user.setUserLocalId(cursor.getLong(0));
-                user.setUserExternId(cursor.getLong(1));
-
-                user.setEmail(cursor.getString(2));
-                user.setPhone(cursor.getString(3));
-                user.setDni(cursor.getString(4));
-                user.setPassword(cursor.getString(5));
-                user.setFirstName(cursor.getString(6));
-                user.setLastName(cursor.getString(7));
-                user.setCodeDepartamento(cursor.getInt(8));
-                user.setCodeProvincia(cursor.getInt(9));
-                user.setCodeDistrito(cursor.getInt(10));
-                user.setAvance(cursor.getInt(11));
-                listaUser.add(user);
-
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-
-        return listaUser;
-
-    }
-
-
-
-
-
-    public void insertUser(User user){
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues nuevoRegistro = new ContentValues();
-        nuevoRegistro.put("ID_USER_EXTERN", user.getUserLocalId());
-        nuevoRegistro.put("EMAIL",user.getEmail() );
-        nuevoRegistro.put("PHONE",user.getPhone() );
-        nuevoRegistro.put("DNI",user.getDni() );
-        nuevoRegistro.put("PASSWORD",user.getPassword());
-        nuevoRegistro.put("NAME",user.getFirstName());
-        nuevoRegistro.put("LASTNAME",user.getLastName());
-        nuevoRegistro.put("CODE_DEPARTAMENTO",user.getCodeDepartamento());
-        nuevoRegistro.put("CODE_PROVINCIA",user.getCodeProvincia());
-        nuevoRegistro.put("CODE_DISTRITO",user.getCodeDistrito());
-        nuevoRegistro.put("AVANCE",user.getAvance());
-
-
-        db.insert(TABLE_USER, null, nuevoRegistro);
-
-
-    }
-
-    public void editAvance(Integer avance,String email){
-        SQLiteDatabase db = getWritableDatabase();
-
-        ContentValues valores = new ContentValues();
-        valores.put("AVANCE",avance);
-        db.update(TABLE_USER, valores, "EMAIL='".concat(email+"'"), null);
-
-    }
 
     public void editMember(String instituion,String region,Integer isMember,String email){
         SQLiteDatabase db = getWritableDatabase();
-
         ContentValues valores = new ContentValues();
         valores.put("REGION",region);
         valores.put("INSTITUCION",instituion);
         valores.put("ISMEMBER",isMember);
         db.update(TABLE_USER, valores, "EMAIL='".concat(email+"'"), null);
-
     }
 
 
 
-
-    public void editExtraInfo(String instution,String region,Integer isMember ,Integer id){
-        SQLiteDatabase db = getWritableDatabase();
-
-        ContentValues valores = new ContentValues();
-        valores.put("INSTITUCION",instution);
-        valores.put("REGION",region);
-        valores.put("ISMEMBER",isMember);
-
-        db.update(TABLE_USER, valores, "ID_USER_LOCAL=".concat(id.toString()), null);
-
-    }
-
-
-
-    public void insertAudio(String email,Integer order,String  filename){
-        Log.d("tag","insert audio");
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues nuevoRegistro = new ContentValues();
-        nuevoRegistro.put("EMAIL_USER", email);
-        nuevoRegistro.put("ORDER_FILE",order );
-        nuevoRegistro.put("IS_SEND",0 );
-        nuevoRegistro.put("NAME_FILE",filename );
-
-
-
-        db.insert(TABLE_AUDIOS, null, nuevoRegistro);
-
-
-    }
-
-    public void deleteAudio(String email,Integer order){
-        SQLiteDatabase db = getWritableDatabase();
-
-        db.delete(TABLE_AUDIOS, "EMAIL_USER" + "='" + email+"' AND ORDER_FILE="+order, null);
-
-
-
-    }
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Metodo para obtener el listado de departamentos de la base de datos interna
+     * @return lista de departametos encontrados
+     * @throws ParseException
+     */
     public ArrayList<Ubigeo> getListDepartamento() throws ParseException {
         SQLiteDatabase db = getWritableDatabase();
         ArrayList<Ubigeo> lista = new ArrayList<>();
@@ -361,6 +170,12 @@ public class DataBaseService extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Metodo para obtener el listado de provincia de la base de datos Interna
+     * @param idDepartamento id del Departamento cuya provincias se desea obtener
+     * @return lista de provincias encontradas
+     * @throws ParseException
+     */
     public ArrayList<Ubigeo> getListProvincia(Integer idDepartamento) throws ParseException {
         SQLiteDatabase db = getWritableDatabase();
         ArrayList<Ubigeo> lista = new ArrayList<>();
@@ -387,6 +202,14 @@ public class DataBaseService extends SQLiteOpenHelper {
 
     }
 
+
+    /**
+     * Metodo  para buscar los distritos de la base de datos interna
+     * @param idDepartamento id Del departamento cuyos distritos se deben buscar
+     * @param idProvincia id de la provincia de los distritos a buscar
+     * @return lista de distritos encontrados
+     * @throws ParseException
+     */
     public ArrayList<Ubigeo> getListDistrito(Integer idDepartamento,Integer idProvincia) throws ParseException {
         SQLiteDatabase db = getWritableDatabase();
         ArrayList<Ubigeo> lista = new ArrayList<>();
@@ -414,22 +237,15 @@ public class DataBaseService extends SQLiteOpenHelper {
     }
 
 
-
-
-
-
-
+    /**
+     * Método para cerrar la conexion a la base de datos
+     */
     @Override
     public synchronized void close() {
         if (dbHelper != null)
             dbHelper.close();
         super.close();
     }
-
-
-
-
-
 
 
 

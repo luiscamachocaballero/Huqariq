@@ -3,10 +3,7 @@ package com.itsigned.huqariq.player
 import android.content.Context
 import android.media.MediaRecorder
 import android.os.Environment.getExternalStorageDirectory
-import com.itsigned.huqariq.database.DataBaseService
-import com.itsigned.huqariq.util.Constants
 import com.itsigned.huqariq.util.Util
-import com.itsigned.huqariq.util.session.SessionManager
 import java.io.File
 import java.io.File.separator
 
@@ -16,7 +13,7 @@ class MediaRecordHolder (event: EventMediaRecordHolder){
 
 
     private var mediaRecorder: MediaRecorder? = null
-     var lastAudioRecord: String? = null
+    private var lastAudioRecord: String? = null
     private var eventMediaRecordHolder: EventMediaRecordHolder=event
 
 
@@ -81,12 +78,6 @@ class MediaRecordHolder (event: EventMediaRecordHolder){
                 e.printStackTrace()
             }
     }
-
-
-
-
-
-
 
 
     interface EventMediaRecordHolder {

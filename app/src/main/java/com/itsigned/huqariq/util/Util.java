@@ -4,33 +4,31 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.WindowManager;
-
 import com.itsigned.huqariq.R;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
+/**
+ * Clase con metodos utilitarios
+ */
 public class Util {
 
+
+    /**
+     * Metodo para validar un correo
+     * @param email correo a validar
+     * @return boleano indicando si se paso la validacion o no
+     */
     public static boolean validarCorreo(String email) {
 
         String regExpn =
@@ -51,52 +49,7 @@ public class Util {
     }
 
 
-    public static boolean isOnline() {
-        try {
-            int timeoutMs = 1500;
-            Socket sock = new Socket();
-            SocketAddress sockaddr = new InetSocketAddress("8.8.8.8", 53);
 
-            sock.connect(sockaddr, timeoutMs);
-            sock.close();
-
-            return true;
-        } catch (IOException e) { return false; }
-    }
-
-    public static String getAudioName(int numberFie, String fileName, Context context){
-            int index=0;
-            InputStream fIn = null;
-            InputStreamReader isr = null;
-            BufferedReader input = null;
-            try {
-                fIn = context.getResources().getAssets()
-                        .open(fileName, Context.MODE_WORLD_READABLE);
-                isr = new InputStreamReader(fIn);
-                input = new BufferedReader(isr);
-                String line = "";
-                while ((line = input.readLine()) != null) {
-                    if (numberFie==index)return  line;
-                    index++;
-                }
-            } catch (Exception e) {
-                e.getMessage();
-            } finally {
-                try {
-                    if (isr != null)
-                        isr.close();
-                    if (fIn != null)
-                        fIn.close();
-                    if (input != null)
-                        input.close();
-                } catch (Exception e2) {
-                    e2.getMessage();
-                }
-            }
-            return null;
-
-
-    }
 
     public static String getSimpleDateToday() {
         DateTime today = new DateTime(DateTimeZone.forID(Constants.DATE_TIME_ZONE_AMERICA_LATINA));
@@ -104,6 +57,13 @@ public class Util {
         return sdf.format(today.toDate());
     }
 
+
+    /**
+     * Metodo para copiar archivos
+     * @param source archivo de origen
+     * @param context contexto a trabajar
+     * @throws IOException
+     */
     public static void copyFileUsingStream(File source,Context context) throws IOException {
         InputStream is = null;
         FileOutputStream fos = context.openFileOutput(source.getName(), Context.MODE_PRIVATE);
@@ -120,7 +80,12 @@ public class Util {
         }
     }
 
-
+    /**
+     * Metodo para obtner un progresDialog personalizad
+     * @param mContext contexto a trabajar
+     * @param mensaje mensaje a colocar en el progress dialog
+     * @return progressdialog obtenido
+     */
     public static ProgressDialog createProgressDialog(Context mContext,String mensaje) {
         ProgressDialog dialog = new ProgressDialog(mContext);
         try {
@@ -135,6 +100,10 @@ public class Util {
         return dialog;
     }
 
+    /**
+     * Metodo para obtener un string en base a un formato de fecha
+     * @return cadena obtenida
+     */
     public static String getStringDate(){
         String date = Util.getSimpleDateToday();
         String[] parts = date.split("-");
@@ -167,14 +136,7 @@ public class Util {
 
     }
 
-    public static String getFileName(Integer codeDepartamento){
-        return "collao";
-    }
 
 
-    @NotNull
-    public static Integer getTotalAudio(@Nullable String fileName) {
-        if (fileName.equals("collao")) return 331;
-        return 229;
-    }
+
 }

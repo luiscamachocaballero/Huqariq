@@ -22,7 +22,7 @@ class SplashActivity : AppCompatActivity() {
 
         AppCenter.start(application, "9080c742-2242-4b86-8e4f-c971edeb4158",
                 Analytics::class.java, Crashes::class.java)
-        
+
         val task: TimerTask = object : TimerTask() {
             override fun run() {
                 val isLogued=SessionManager.getInstance(this@SplashActivity).isLogged

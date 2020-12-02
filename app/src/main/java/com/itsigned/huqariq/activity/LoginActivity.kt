@@ -27,6 +27,9 @@ class LoginActivity : AppCompatActivity() {
         configureActionButton()
     }
 
+    /**
+     * Metodo con las configuraciones iniciales de los botones
+     */
     private fun configureActionButton() {
         btnRegistro.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
@@ -35,8 +38,10 @@ class LoginActivity : AppCompatActivity() {
         btnLogin.setOnClickListener { login() }
     }
 
+    /**
+     * Metodo para autentificar al usuario
+     */
     private fun verifyLoginExtern() {
-        Log.d("verify extern","verify extern")
         val progress = Util.createProgressDialog(this, "Cargando")
         progress.show()
         RafiServiceWrapper.loginUser(this,
@@ -54,8 +59,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-
-
+    /**
+     * Sobreescritura del metodo onActivityResult
+     * @param requestCode codigo del Request del activity
+     * @param resultCode codigo de resultado del activity
+     * @param data extraData con información de la accion
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.d("result ", "result $resultCode request $requestCode")
         if (requestCode == REQUEST_SIGNUP) {
@@ -66,6 +75,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Metodo para validar los datos del login
+     */
     private fun login() {
         if (hasErrorEditTextEmpty(etEmail, R.string.registro_message_error_ingrese_correo_electronico)) return
         if (hasErrorEditTextEmpty(etPass, R.string.registro_message_error_ingrese_contrasena_usuario)) return
