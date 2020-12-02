@@ -7,7 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.itsigned.huqariq.R
 import com.itsigned.huqariq.helper.goToActivity
 import com.itsigned.huqariq.util.session.SessionManager
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import java.util.*
+
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,6 +19,10 @@ class SplashActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_splash)
+
+        AppCenter.start(application, "9080c742-2242-4b86-8e4f-c971edeb4158",
+                Analytics::class.java, Crashes::class.java)
+        
         val task: TimerTask = object : TimerTask() {
             override fun run() {
                 val isLogued=SessionManager.getInstance(this@SplashActivity).isLogged
