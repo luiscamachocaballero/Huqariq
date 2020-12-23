@@ -245,7 +245,7 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
      * Metodo para iniciar la grabación de un adio
      */
     fun recordAudio(){
-        val permisionRecordAudio=PermissionHelper.recordAudioPermmision(context!!,null)
+        val permisionRecordAudio=PermissionHelper.recordAudioPermmision(context!!,this)
         if(!permisionRecordAudio) return
         initAnimation()
         mediaRecordHolder?.initRecord(SessionManager.getInstance(activity).userLogged.dni,index,context!!)

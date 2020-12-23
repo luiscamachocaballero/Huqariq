@@ -19,6 +19,8 @@
 
     <string name="edit_text_hint_correo_electronico">Correo Electrónico</string>
     <string name="edit_text_hint_correo_contrasenia">Contraseña</string>
+    <string name="edit_text_hint_repeat_correo_contrasenia">Repetir Contraseña</string>
+
     <string name="edit_text_hint_numero_documento">Número de Documento</string>
     <string name="edit_text_hint_numero_telefono">Teléfono</string>
     <string name="et_hint_escribe">Escribe para empezar ...</string>
@@ -37,6 +39,15 @@
     <string name="registro_message_error_ingrese_nombres">Ingrese nombres</string>
     <string name="registro_message_error_formato_dni">Formato de DNI incorrecto</string>
     <string name="registro_message_error_formato_phone">Formato de Telefono incorrecto</string>
+    <string name="register_select_region">Debe seleccionar una Region</string>
+    <string name="message_need_permission">Necesita aceptar los permisos para poder continuar</string>
+    <string name="message_acept_permission">Ahora ya puede continuar</string>
+
+    <string name="register_select_province">Debe seleccionar una Provincia</string>
+    <string name="register_select_district">Debe seleccionar un Distrito</string>
+
+    <string name="dialog_close">Cerrar</string>
+
     <string name="message_ya_registrado">ya registrado</string>
     <string name="registro_message_error_campo_vacio">No puede dejar este campo vacío</string>
     <string name="registro_message_error_correo_anterior">Correo registrado anteriormente</string>
@@ -47,7 +58,7 @@
     <string name="generic_error">Lo sentimos no hemos podido realizar su petición. Por favor inténtelo otra vez en unos minutos</string>
     <string name="login_facebook_error">Lo sentimos no hemos podido crear su cuenta usando Facebook. Por favor inténtelo otra vez en unos minutos</string>
 
-    <string name="edit_text_hint_name">Nombre</string>
+    <string name="edit_text_hint_name">Nombres</string>
     <string name="edit_text_hint_surname">Apellidos</string>
     <string name="edit_text_hint_dni">DNI</string>
 
@@ -66,7 +77,7 @@
     <string name="title_record">
         Grabación de Voz (Quechua)
     </string>
-<string name="next_record">
+    <string name="next_record">
     Siguiente
 </string>
 
@@ -74,5 +85,20 @@
     ENVIAR AUDIOS
 </string>
 
+    <string name="message_loading_dialog">
+        Cargando…
+    </string>
+
+    <string name="view_register_next_button">Siguiente</string>
+    <string name="view_register_next_back">Atras</string>
+    <string name="view_register_complete_buttom">Hecho</string>
+    <string name="register_listen_question_one">Escuchar Pregunta 1</string>
+    <string name="register_listen_question_two">Escuchar Pregunta 2</string>
+    <string name="register_listen_question_three">Escuchar Pregunta 3</string>
+    <string name="register_listen_question_Four">Escuchar Pregunta 4</string>
+    <string name="register_listen_question_Five">Escuchar Pregunta 5</string>
+
 
 </resources>
+
+

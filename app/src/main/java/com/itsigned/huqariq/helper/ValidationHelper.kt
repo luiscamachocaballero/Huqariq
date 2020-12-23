@@ -14,6 +14,16 @@ class ValidationHelper {
             return email.matches(regex.toRegex())
         }
 
+        fun validatePassword(pass:String):Boolean{
+            if (!pass.isNullOrEmpty())return true
+            return false;
+        }
+
+
+        fun validateStringEmpty(value:String):Boolean{
+            return !value.isNullOrEmpty()
+        }
+
         /**
          * Metodo para validar el formato de un DNI
          * @param identifyNumber dni a validar

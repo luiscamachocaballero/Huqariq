@@ -3,6 +3,7 @@ package com.itsigned.huqariq.player
 import android.content.Context
 import android.media.MediaRecorder
 import android.os.Environment.getExternalStorageDirectory
+import android.util.Log
 import com.itsigned.huqariq.util.Util
 import java.io.File
 import java.io.File.separator
@@ -28,6 +29,7 @@ class MediaRecordHolder (event: EventMediaRecordHolder){
         mediaRecorder.setAudioChannels(1)
         mediaRecorder.setAudioSamplingRate(16000)
         lastAudioRecord = getPathToAudio(dni,index,context)
+        Log.d("MediarecordHolder","last audio record "+lastAudioRecord)
         mediaRecorder.setOutputFile(lastAudioRecord)
         return mediaRecorder
     }
@@ -59,16 +61,20 @@ class MediaRecordHolder (event: EventMediaRecordHolder){
 
     fun stopRecord(){
         mediaRecorder?.stop()
+        Log.d("MediaRecord holder", "finish record in "+lastAudioRecord)
         eventMediaRecordHolder.finishRecord(lastAudioRecord!!)
     }
 
     fun cancelRecord(){
-        mediaRecorder?.stop()
-
+        try {
+            mediaRecorder?.stop()
+        }catch (e:java.lang.Exception){
+        }
     }
 
 
     fun initRecord(dni:String,index:Int,context: Context) {
+        Log.d("MediaRecordHolder","Init record")
             mediaRecorder = getMediaRecorderReady(dni,index,context)
             try {
                 mediaRecorder?.prepare()

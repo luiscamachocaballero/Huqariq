@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.itsigned.huqariq.R
+import com.itsigned.huqariq.helper.PermissionHelper
 import com.itsigned.huqariq.helper.goToActivity
 import com.itsigned.huqariq.helper.hasErrorEditTextEmpty
 import com.itsigned.huqariq.helper.showError
@@ -25,6 +26,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         if (SessionManager.getInstance(this).isLogged) goToActivity()
         configureActionButton()
+        PermissionHelper.recordAudioPermmision(this,null)
+
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.itsigned.huqariq.helper
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +9,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.itsigned.huqariq.R
 import com.itsigned.huqariq.activity.MainActivity
 import com.itsigned.huqariq.util.Constants
@@ -18,6 +22,19 @@ fun AppCompatActivity.goToActivity(cl:Class<*> = MainActivity::class.java, finis
     startActivity(mainIntent)
 }
 
+fun FragmentActivity.getLoadingProgress(idLayout:Int=R.layout.dialog_custom_progress): Dialog {
+    val customDialog = AlertDialog.Builder(this)
+    val viewDialog =  layoutInflater.inflate(idLayout, null)
+    customDialog.setView(viewDialog)
+    customDialog.setCancelable(false)
+    return customDialog.create()
+}
+
+fun Fragment.setErrorEditText(editText: EditText, idString:Int){
+    editText.error=getString(idString)
+    editText.isFocusable=true
+    editText.requestFocus()
+}
 
 
 fun AppCompatActivity.hasErrorEditTextEmpty(editText: EditText, idMessage:Int):Boolean{
@@ -37,6 +54,14 @@ fun AppCompatActivity.showMessage(message:String){
 }
 
 /**
+ * Metodo para mostrar un toast
+ * @param message mensaje a mostrar en el toast
+ */
+fun Fragment.showMessage(message:String){
+    Toast.makeText(context!!,message,Toast.LENGTH_LONG).show()
+}
+
+/**
  * Metodo para mostrar un error en un editText
  * @param editText edittext donde se mostrara el error
  * @param message mensaje de error a mostrar
@@ -52,13 +77,6 @@ fun AppCompatActivity.showError(editText: EditText, message: String) {
 /**
  * Metodo que coloca un toolbar en un activity
  */
-fun AppCompatActivity.setupToolbar() {
-    val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-    setSupportActionBar(toolbar)
-    val ab = supportActionBar
-    ab!!.setDisplayHomeAsUpEnabled(true)
-}
-
 
 
 class ViewHelper {

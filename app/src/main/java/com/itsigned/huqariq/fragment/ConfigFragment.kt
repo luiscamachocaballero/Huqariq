@@ -39,18 +39,18 @@ class ConfigFragment : Fragment() {
         view.etRegion.setText(user.region)
         view.etInstitution.setText(user.institution)
         view.cbEnabled.setOnCheckedChangeListener { _, b -> this.updateEditText(view,b) }
-        view.btSaveCongiguration.setOnClickListener {saveCongiguration()}
-        if (user.isMember==Constants.IS_MEMBER){view.cbEnabled.isChecked=true
-            view.tvTextChek.text = "HABILITADO"
-        }
-        return view
-
-
+    view.btSaveCongiguration.setOnClickListener {saveCongiguration()}
+    if (user.isMember==Constants.IS_MEMBER){view.cbEnabled.isChecked=true
+        view.tvTextChek.text = "HABILITADO"
     }
+    return view
 
-    /**
-     * Metodo para guardar la configuración creada porel usuario
-     */
+
+}
+
+/**
+ * Metodo para guardar la configuración creada porel usuario
+ */
     private fun saveCongiguration() {
         if (cbEnabled.isChecked){
             if (etRegion.text.toString()==""){

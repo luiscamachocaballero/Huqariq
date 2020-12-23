@@ -148,7 +148,7 @@ class RafiServiceWrapper {
          */
     fun uploadAudio(fileName:String, requestBody: RequestBody, context: Context,
                     onSuccess: () -> Unit, onError: (error: String?) -> Unit) {
-        Log.d(TAG,"execute service uploadAudio whith")
+        Log.d(TAG,"execute service uploadAudio whith name"+fileName)
         Log.d(TAG,requestBody.toString())
         val part = MultipartBody.Part.createFormData("files", fileName, requestBody)
         val apiService = RafiService.create()

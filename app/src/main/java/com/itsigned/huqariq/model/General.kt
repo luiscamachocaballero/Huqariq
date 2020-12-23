@@ -55,3 +55,24 @@ data class Language(
         return name
     }
 }
+
+
+data class FormRegisterUserStepOneDto(
+        var email:String,
+        var password:String,
+        var name:String,
+        var surname:String
+)
+
+data class FormRegisterUserStepTwoDto(
+        var regionId :String,
+        var provinciaId :String,
+        var distritoId :String,
+        var phone:String,
+        var nativeLang:Int
+)
+
+
+data class FormRegisterStepThreeDto(
+       var sd:String=""
+)

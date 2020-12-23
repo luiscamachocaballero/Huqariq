@@ -2,6 +2,7 @@ package com.itsigned.huqariq.helper
 
 import android.content.Context
 import android.os.Environment
+import android.util.Log
 import okhttp3.ResponseBody
 import java.io.*
 import java.util.*
@@ -29,9 +30,12 @@ class SystemFileHelper {
          * @param nameFile nombre del archivo a escribir
          */
         fun writeResponseBodyToDisk(context: Context, body: ResponseBody, nameDirectory:String, nameFile:String): Boolean {
+
+            Log.d("SystemFileHelper","write in "+nameDirectory+" file:"+nameFile)
             createDirectory(nameDirectory)
             try {
                 val futureStudioIconFile = File(getPathFile(nameDirectory,nameFile))
+                if(!futureStudioIconFile.exists())futureStudioIconFile.createNewFile()
                 var inputStream: InputStream? = null
                 var outputStream: OutputStream? = null
                 try {
@@ -51,6 +55,7 @@ class SystemFileHelper {
 
 
                 } catch (e: IOException) {
+                    e.printStackTrace()
                     return false
                 } finally {
                     if (inputStream != null) inputStream.close()
@@ -58,6 +63,7 @@ class SystemFileHelper {
 
                 }
             } catch (e: IOException) {
+                e.printStackTrace()
                 return false
             }
 
