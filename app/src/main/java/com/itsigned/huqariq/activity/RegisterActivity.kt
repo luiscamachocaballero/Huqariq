@@ -66,7 +66,9 @@ class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction, StepperLa
             mapValues["email"]=intent.getStringExtra("email")
         }
         stepperLayout.adapter= MyStepperAdapter(supportFragmentManager, this,this)
+        stepperLayout.findViewById<View>(R.id.ms_stepPrevButton).visibility=View.GONE
         stepperLayout.setListener(this)
+       // stepperLayout.bac
         stepperLayout.onBackClicked()
 
 
@@ -171,6 +173,7 @@ class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction, StepperLa
 
     override fun onStepSelected(newStepPosition: Int) {
         this.stepPosition=newStepPosition
+        stepperLayout.findViewById<View>(R.id.ms_stepPrevButton).visibility=View.GONE
 
     }
 

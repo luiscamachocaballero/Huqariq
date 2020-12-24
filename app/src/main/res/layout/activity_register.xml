@@ -16,13 +16,15 @@
     android:layout_gravity="bottom"
     android:layout_weight="0"
         app:ms_tabStepDividerWidth="35dp"
+        app:ms_tabNavigationEnabled="false"
 
 
     app:ms_stepperType="tabs"
     app:ms_nextButtonText="@string/view_register_next_button"
-    app:ms_backButtonText="@string/view_register_next_back"
+    app:ms_backButtonText=""
     app:ms_completeButtonText="@string/view_register_complete_buttom"
     app:ms_showBackButtonOnFirstStep="false"
+
     />
 </FrameLayout>
 
