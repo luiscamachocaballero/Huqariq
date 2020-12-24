@@ -94,6 +94,8 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
      * @param view vista del layout actual
      */
     private fun configureFunctionAudio(view:View){
+        view.record_view.setSoundEnabled(false);
+
         view.record_view.setOnRecordListener(object: OnRecordListener {
             override fun onFinish(recordTime: Long) {finishRecordAudio()}
             override fun onLessThanSecond() {cancelRecordAudio()}
