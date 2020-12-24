@@ -102,7 +102,7 @@
                     android:gravity="center"
                     android:text="@string/mensaje_no_tiene_cuenta"
                     android:textColor="#F79521"
-                    android:textSize="12sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_forget_password"

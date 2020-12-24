@@ -124,6 +124,8 @@ class StepOneFragment : Fragment(), Step {
 
     private fun showErrorPassword() {setErrorEditText(passEditText,R.string.registro_message_error_ingrese_contrasena_usuario) }
 
+    private fun showErrorRepeatPassword() {setErrorEditText(passRepeatEditText,R.string.registro_message_error_repeat_usuario) }
+
     private fun showErrorName() {setErrorEditText(nameEditText,R.string.registro_message_error_ingrese_nombres)}
 
     private fun showErrorSurname() {setErrorEditText(surnameEditText,R.string.registro_message_error_ingrese_apellido_paterno) }
@@ -145,7 +147,8 @@ class StepOneFragment : Fragment(), Step {
 
     private fun getForm(): FormRegisterUserStepOneDto {
         return FormRegisterUserStepOneDto(mailEditText.text.toString(),
-                passEditText.text.toString(),nameEditText.text.toString(),surnameEditText.text.toString())
+                passEditText.text.toString(),etDni.text.toString(),
+                nameEditText.text.toString(),surnameEditText.text.toString())
     }
 
     fun validateStepOneRegister(formRegisterStepOne: FormRegisterUserStepOneDto,statusMail:Int):Boolean {
@@ -156,6 +159,7 @@ class StepOneFragment : Fragment(), Step {
             statusMail== STATUS_MAIL_RED->showMessage(context!!.getString(R.string.registro_message_error_correo_electronico_invalido))
             !ValidationHelper.validateMail(formRegisterStepOne.email)->showErrorMail()
             !ValidationHelper.validatePassword(formRegisterStepOne.password)->showErrorPassword()
+            formRegisterStepOne.password!=passRepeatEditText.text.toString()->showErrorRepeatPassword()
             !ValidationHelper.validateStringEmpty(formRegisterStepOne.name)->showErrorName()
             !ValidationHelper.validateStringEmpty(formRegisterStepOne.surname)->showErrorSurname()
             else->return true

@@ -29,6 +29,10 @@ private var listaDepartamento: ArrayList<Ubigeo>? = null
 private var departamento: String? = null
 private var provincia: String? = null
 private var distrito: String? = null
+private var idDepartamento: String? = null
+private var idProvincia: String? = null
+private var idDistrito: String? = null
+
 private var ubigeoSelected:Ubigeo?=null
 
 class StepTwoFragment : Fragment() , Step {
@@ -94,6 +98,7 @@ class StepTwoFragment : Fragment() , Step {
     private fun spinnerItemSelectedDepartamento(position: Int) {
         val ubigeo = spDepartamento.getItemAtPosition(position) as Ubigeo
         departamento = ubigeo.nombre
+        idDepartamento=ubigeo.idDepartamento.toString()
         var listaProvincia: ArrayList<Ubigeo> = ArrayList()
         wrapperQueryDataBase(SEARCH_PROVINCIA,ubigeo.idDepartamento){ x->  listaProvincia =x!! }
         val provinciaAdapter = ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, listaProvincia)
@@ -107,6 +112,8 @@ class StepTwoFragment : Fragment() , Step {
     private fun spinnerItemSelectProvincia(position: Int) {
         val ubigeo = spProvincia.getItemAtPosition(position) as Ubigeo
         provincia = ubigeo.nombre
+        idProvincia=ubigeo.idProvincia.toString()
+
         var listaDistrito: ArrayList<Ubigeo> = ArrayList()
         wrapperQueryDataBase(SEARCH_DISTRITO,ubigeo.idDepartamento,ubigeo.idProvincia){ x->  listaDistrito =x!! }
         val distritoAdapter = ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, listaDistrito)
@@ -121,6 +128,7 @@ class StepTwoFragment : Fragment() , Step {
     private fun spinnerItemSelectDistrito(position: Int) {
         val ubigeo = spDistrito.getItemAtPosition(position) as Ubigeo
         distrito = departamento + "/" + provincia + "/" + ubigeo.nombre
+        idDistrito=ubigeo.idDistrito.toString()
         ubigeoSelected = ubigeo
         val quantity=if(isSouth())  3 else 4
         action!!.changeQuantityTab(quantity)
@@ -138,9 +146,10 @@ class StepTwoFragment : Fragment() , Step {
 
     override fun verifyStep(): VerificationError? {
         val validForm=validateStepTwoRegister()
-        if(validForm)return null
         val form=getForm()
         action!!.setDataFormSteperTwo(form)
+        if(validForm)return null
+
         return VerificationError("")
     }
 
@@ -149,7 +158,7 @@ class StepTwoFragment : Fragment() , Step {
 
     private fun getForm(): FormRegisterUserStepTwoDto {
 
-        return FormRegisterUserStepTwoDto(departamento!!, provincia!!, distrito!!,"",1)
+        return FormRegisterUserStepTwoDto(idDepartamento!!, idProvincia!!, idDistrito!!,"",1)
     }
 
     fun validateStepTwoRegister():Boolean {

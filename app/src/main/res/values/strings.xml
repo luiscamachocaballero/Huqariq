@@ -33,6 +33,8 @@
     <string name="registro_message_error_ingrese_correo_electronico">Por favor ingrese un correo electrónico</string>
     <string name="registro_message_error_correo_electronico_invalido">Correo electrónico inválido</string>
     <string name="registro_message_error_ingrese_contrasena_usuario">Ingrese una contraseña</string>
+    <string name="registro_message_error_repeat_usuario">Contraseñas no Coinciden</string>
+
     <string name="registro_message_error_mensaje_contribuyente_nulo">Usted no es contribuyente</string>
     <string name="registro_message_error_ingrese_apellido_paterno">Ingrese apellido paterno</string>
     <string name="registro_message_error_ingrese_apellido_materno">Ingrese apellido materno</string>
@@ -41,7 +43,7 @@
     <string name="registro_message_error_formato_phone">Formato de Telefono incorrecto</string>
     <string name="register_select_region">Debe seleccionar una Region</string>
     <string name="message_need_permission">Necesita aceptar los permisos para poder continuar</string>
-    <string name="message_acept_permission">Ahora ya puede continuar</string>
+    <string name="message_acept_permission">Ahora ya puede continuar, por favor vuelva a intentar</string>
 
     <string name="register_select_province">Debe seleccionar una Provincia</string>
     <string name="register_select_district">Debe seleccionar un Distrito</string>
@@ -98,6 +100,11 @@
     <string name="register_listen_question_Four">Escuchar Pregunta 4</string>
     <string name="register_listen_question_Five">Escuchar Pregunta 5</string>
 
+
+    <string name="download_consentiment">Descargar</string>
+    <string name="play_consentiment">Escuchar</string>
+
+    <string name="message_error_question">Lamentablemente usted no ha respondido correctamente varias de las preguntas realizadas, usted no puede continuar, lo animamos que registre a una persona Quechuahablante</string>
 
 </resources>
 

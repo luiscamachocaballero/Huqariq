@@ -14,7 +14,7 @@ class MediaRecordHolder (event: EventMediaRecordHolder){
 
 
     private var mediaRecorder: MediaRecorder? = null
-    private var lastAudioRecord: String? = null
+    var lastAudioRecord: String? = null
     private var eventMediaRecordHolder: EventMediaRecordHolder=event
 
 

@@ -3,14 +3,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/normal_space"
     tools:context=".fragment.StepFourFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/confirmationText"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/downloadButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_download"
+                    android:drawablePadding="8dp"
+                    android:text="@string/download_consentiment"
+                    android:theme="@style/AccentButtonStyles"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <Button
+                    android:id="@+id/playButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_volume_white"
+                    android:drawablePadding="8dp"
+                    android:text="@string/play_consentiment"
+                    android:theme="@style/AccentButtonStyles"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:layout_marginTop="@dimen/normal_space"
+                android:id="@+id/confirmationText"
+                android:layout_width="match_parent"
+                android:justificationMode="inter_word"
+                android:layout_height="match_parent"
+                android:text="@string/hello_blank_fragment" />
+            <CheckBox
+                android:id="@+id/aceptConsentimentCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aceptar Consentimiento"
+                android:focusableInTouchMode="true"
+                android:focusable="true"
+                android:layout_marginBottom="32dp"
+                android:layout_marginTop="@dimen/normal_space"
+                />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- TODO: Update blank fragment layout -->
+
+
 
 </FrameLayout>

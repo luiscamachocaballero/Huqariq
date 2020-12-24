@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.util.SparseArray
 import android.view.MenuItem
 import android.view.View
@@ -106,6 +107,19 @@ class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction, StepperLa
         usuario.idLanguage=idDialect
 
          */
+
+        usuario.firstName = formRegisterUserStepOneDto!!.name
+        usuario.lastName = formRegisterUserStepOneDto!!.surname
+        usuario.email = formRegisterUserStepOneDto!!.email
+        usuario.password = formRegisterUserStepOneDto!!.password
+        usuario.phone = ""
+        usuario.dni = formRegisterUserStepOneDto!!.dni
+        usuario.codeDepartamento=formRegisterUserStepTwoDto!!.regionId.toInt()
+        usuario.codeProvincia=formRegisterUserStepTwoDto!!.provinciaId.toInt()
+        usuario.codeDistrito=formRegisterUserStepTwoDto!!.distritoId.toInt()
+        usuario.avance=0
+        usuario.idLanguage=formRegisterUserStepThreeDto!!.idDialect.toInt()
+        Log.d("user for register",usuario.toString())
         registerByServiceWeb(usuario)
     }
 
@@ -167,13 +181,7 @@ class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction, StepperLa
     }
 
     override fun onCompleted(completeButton: View?) {
-      /*
-        val formRegister=GeneralMapper.getFinalFormRegisterUser(formRegisterUserStepOneDto!!,
-                formRegisterUserStepTwoDto!!)
-                */
-
         registrar()
-
     }
 
     override fun getValues(): HashMap<String, String> {

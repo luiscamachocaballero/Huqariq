@@ -18,17 +18,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import com.itsigned.huqariq.R
 import com.itsigned.huqariq.activity.GetFormDataStepperAction
 import com.itsigned.huqariq.activity.MainActivity
+import com.itsigned.huqariq.dialog.PlayAudioDialog
 import com.itsigned.huqariq.helper.SystemFileHelper
 import com.itsigned.huqariq.util.Consentiment
+import com.itsigned.huqariq.util.Util
 import com.stepstone.stepper.Step
 import com.stepstone.stepper.VerificationError
 import kotlinx.android.synthetic.main.fragment_step_four.*
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 import java.util.*
 
 
@@ -52,27 +57,40 @@ class StepFourFragment : Fragment() , Step {
         } else {
             confirmationText.setText(Html.fromHtml(Consentiment.CONSENTIMENT_TEXT));
         }
-        sendNotification()
+        downloadButton.setOnClickListener {
+            hackDisabled()
+            val path=Util.saveConsentiment(context!!)
+            sendNotification(path)
+        }
+
+        playButton.setOnClickListener {
+            val dialog= PlayAudioDialog(R.raw.consentimientoaudio,"Presione play para escuchar elConsentimiento Informado")
+            dialog.isCancelable=false
+            dialog.show(activity!!.supportFragmentManager,"")
+        }
+        aceptConsentimentCheckBox.setOnClickListener { aceptConsentimentCheckBox.error=null }
 
     }
 
 
-    private fun sendNotification() {
+
+
+    private fun sendNotification(path: String) {
         Log.d("Send Notification","sendNotification")
         hackDisabled()
         val intent = Intent(context!!, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val pending = PendingIntent.getActivity(context!!,
-                0, openFile(),  PendingIntent.FLAG_ONE_SHOT)
+                0, openFile(path),  PendingIntent.FLAG_ONE_SHOT)
 
         val notificationBuilder = NotificationCompat.Builder(context!!)
                 .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.myc)
                 .setAutoCancel(false)
-                .setContentTitle("Acta.pdf")
+                .setContentTitle("consentimiento.pdf")
                 .setContentText("Descargado")
-                .addAction(R.mipmap.ic_launcher, "recibir",
+                .addAction(R.mipmap.ic_launcher, "Abrir",
                         pending)
         //  .setAutoCancel(true)
         //  .setSound(defaultSoundUri)
@@ -92,8 +110,8 @@ class StepFourFragment : Fragment() , Step {
         notificationManager.notify(10000, notificationBuilder.build())
     }
 
-    private fun openFile():Intent{
-        val file = File(SystemFileHelper.getPathFile("huwariqa","sssd"))
+    private fun openFile(path:String):Intent{
+        val file = File(path)
         val uri =  Uri.fromFile(file)
         val intent = Intent(Intent.ACTION_VIEW)
         val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
@@ -110,6 +128,11 @@ class StepFourFragment : Fragment() , Step {
     }
 
     override fun verifyStep(): VerificationError? {
+        if(aceptConsentimentCheckBox.isChecked)return null
+        //Toast.makeText(context!!,"Debe Aceptar el Consentimiento para Continuar",Toast.LENGTH_LONG).show()
+        aceptConsentimentCheckBox.isFocusable=true
+        aceptConsentimentCheckBox.requestFocus()
+        aceptConsentimentCheckBox.setError("Debe Aceptar el Consentimiento para continuar")
         return VerificationError("")
     }
 

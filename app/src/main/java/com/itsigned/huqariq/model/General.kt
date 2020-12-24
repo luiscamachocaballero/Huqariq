@@ -60,6 +60,7 @@ data class Language(
 data class FormRegisterUserStepOneDto(
         var email:String,
         var password:String,
+        var dni:String,
         var name:String,
         var surname:String
 )
@@ -74,5 +75,5 @@ data class FormRegisterUserStepTwoDto(
 
 
 data class FormRegisterStepThreeDto(
-       var sd:String=""
+       var idDialect:String
 )

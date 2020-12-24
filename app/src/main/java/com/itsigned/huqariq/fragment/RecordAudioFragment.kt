@@ -1,6 +1,7 @@
 package com.itsigned.huqariq.fragment
 
 import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -246,7 +247,10 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
      */
     fun recordAudio(){
         val permisionRecordAudio=PermissionHelper.recordAudioPermmision(context!!,this)
-        if(!permisionRecordAudio) return
+        if(!permisionRecordAudio){
+            record_view.cancelLongPress()
+            return
+        }
         initAnimation()
         mediaRecordHolder?.initRecord(SessionManager.getInstance(activity).userLogged.dni,index,context!!)
     }
@@ -333,7 +337,18 @@ class RecordAudioFragment : Fragment(), MediaPlayerHolder.EventMediaPlayer ,Medi
      */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode){
-            REQUEST_PERMISION_AUDIO->getAudioWebService()
+            REQUEST_PERMISION_AUDIO->{
+                getAudioWebService()
+
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(context,R.string.message_need_permission, Toast.LENGTH_LONG).show()
+                }else{
+                    Toast.makeText(context,R.string.message_acept_permission, Toast.LENGTH_LONG).show()
+
+                }
+
+
+            }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }

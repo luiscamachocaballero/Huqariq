@@ -14,7 +14,7 @@ import com.itsigned.huqariq.R
 import kotlinx.android.synthetic.main.record_audio_dialog.*
 
 
-class PlayAudioDialog(val indexAudio:Int) : DialogFragment() {
+class PlayAudioDialog(val idRaw:Int,val message:String) : DialogFragment() {
     private  var mediaPlayer: MediaPlayer? = null
     private var initRecord=false
 
@@ -30,7 +30,8 @@ class PlayAudioDialog(val indexAudio:Int) : DialogFragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view:View, @Nullable  savedInstanceState:Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        textViewMessageAudio.setText("Presione el boton Play para escuchar la pregunta ${indexAudio+1}")
+        setCancelable(false)
+        textViewMessageAudio.setText(message)
         buttonCancel.setOnClickListener{
             if(initRecord)mediaPlayer!!.stop();dismiss()}
         buttonMicStart.setOnClickListener{playAudio()}
@@ -45,9 +46,8 @@ class PlayAudioDialog(val indexAudio:Int) : DialogFragment() {
     }
 
     private fun playAudio(){
-        val listRaw= arrayListOf(R.raw.questionone,R.raw.questiontwo,R.raw.questionthree,R.raw.questionfour,R.raw.questionfive)
 
-        mediaPlayer = MediaPlayer.create(context!!, listRaw[indexAudio])
+        mediaPlayer = MediaPlayer.create(context!!, idRaw)
         mediaPlayer!!.setOnCompletionListener { reinitView() }
         mediaPlayer!!.start()
         waveFormView.updateAmplitude(1f,true)
@@ -65,6 +65,7 @@ class PlayAudioDialog(val indexAudio:Int) : DialogFragment() {
     }
 
     private fun reinitView(){
+        if(!isVisible)return
         buttonMicStart.show()
         buttonMicStop.hide()
         waveFormView.updateAmplitude(0f,false)

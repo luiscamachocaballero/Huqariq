@@ -3,12 +3,17 @@ package com.itsigned.huqariq.util;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Environment;
+import android.util.Log;
 import android.view.WindowManager;
 import com.itsigned.huqariq.R;
+import com.itsigned.huqariq.helper.SystemFileHelper;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 
 /**
@@ -137,6 +144,30 @@ public class Util {
     }
 
 
+    public static String saveConsentiment(Context context) {
+        InputStream in = null;
+        FileOutputStream fout = null;
+        String pathToDownload="";
+        File sd = null;
+        try {
+            in = context.getResources().openRawResource(R.raw.consentimiento);
+            String downloadsDirectoryPath = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getAbsolutePath();
+            String filename = "consentimiento.pdf";
+            pathToDownload=downloadsDirectoryPath + "/"+ filename;
 
+            sd=new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator +filename);
+
+            fout = new FileOutputStream(sd);
+            Log.d("File","downloaded "+pathToDownload);
+            final byte data[] = new byte[1024];
+            int count;
+            while ((count = in.read(data, 0, 1024)) != -1) {
+                fout.write(data, 0, count);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sd.getAbsolutePath();
+    }
 
 }
