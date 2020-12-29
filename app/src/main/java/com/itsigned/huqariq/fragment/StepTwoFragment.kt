@@ -1,5 +1,6 @@
 package com.itsigned.huqariq.fragment
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,8 +14,12 @@ import com.itsigned.huqariq.R
 import com.itsigned.huqariq.activity.GetFormDataStepperAction
 import com.itsigned.huqariq.bean.Ubigeo
 import com.itsigned.huqariq.database.DataBaseService
+import com.itsigned.huqariq.helper.getLoadingProgress
 import com.itsigned.huqariq.helper.showMessage
+import com.itsigned.huqariq.model.FormDialectRegion
+import com.itsigned.huqariq.model.FormRegisterStepThreeDto
 import com.itsigned.huqariq.model.FormRegisterUserStepTwoDto
+import com.itsigned.huqariq.serviceclient.RafiServiceWrapper
 import com.stepstone.stepper.Step
 import com.stepstone.stepper.VerificationError
 import kotlinx.android.synthetic.main.fragment_step_two.*
@@ -37,6 +42,7 @@ private var ubigeoSelected:Ubigeo?=null
 
 class StepTwoFragment : Fragment() , Step {
     var action: GetFormDataStepperAction?=null
+    lateinit var customProgressDialog: Dialog
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -130,8 +136,30 @@ class StepTwoFragment : Fragment() , Step {
         distrito = departamento + "/" + provincia + "/" + ubigeo.nombre
         idDistrito=ubigeo.idDistrito.toString()
         ubigeoSelected = ubigeo
+        customProgressDialog=getLoadingProgress()
+        customProgressDialog.show()
+        RafiServiceWrapper.validateDialectByRegion(context!!,
+                FormDialectRegion(departamento!!, provincia!!, ubigeo.nombre),{
+            x->
+            val quantity=if(x.dialecto=="0")  4 else 3
+            action!!.changeQuantityTab(quantity)
+            if(quantity==3) {
+
+                val idDialect=if (x.dialecto.toUpperCase(Locale.ROOT)=="CHANCA") 1
+                else ( if(x.dialecto.toUpperCase(Locale.ROOT) == "COLLAO") 2 else -1)
+                action!!.setDataFormSteperThree(FormRegisterStepThreeDto(idDialect.toString()))
+            }
+            customProgressDialog.dismiss()
+        },{
+            Toast.makeText(context!!,R.string.default_error_server,Toast.LENGTH_LONG).show()
+            customProgressDialog.dismiss()
+        })
+
+        /*
         val quantity=if(isSouth())  3 else 4
         action!!.changeQuantityTab(quantity)
+
+         */
     }
 
     private fun isSouth():Boolean{

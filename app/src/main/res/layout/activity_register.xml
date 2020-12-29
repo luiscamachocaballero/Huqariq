@@ -10,7 +10,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:ms_stepperFeedbackType="tabs|disabled_bottom_navigation"
+
+        app:ms_stepperFeedbackType="tabs|content_progress|disabled_bottom_navigation"
     app:ms_showBottomNavigation="true"
     android:gravity="center_horizontal"
     android:layout_gravity="bottom"

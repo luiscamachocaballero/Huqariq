@@ -47,6 +47,12 @@ interface RafiService {
     fun validateDni(@Body body: RequestValidateDni): Observable<ResponseBody>
 
 
+    @POST("/dialecto_region")
+    fun validateDialectByRegion(@Body body: FormDialectRegion): Observable<ResponseDialectRegion>
+
+    @POST("/dialecto")
+    fun validateAnswerDialecto(@Body body: FormDialectAnswer): Observable<ResponseDialectAnswer>
+
 
     companion object Factory {
         fun create(): RafiService {

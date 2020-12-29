@@ -16,7 +16,6 @@ class MyStepperAdapter(fm: FragmentManager, context: Context,
 
 
     override fun getCount(): Int {
-        Log.d("ssds","COUNT "+countTabs)
         return countTabs
     }
 

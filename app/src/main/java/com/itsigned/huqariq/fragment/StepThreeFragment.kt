@@ -1,5 +1,6 @@
 package com.itsigned.huqariq.fragment
 
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -9,29 +10,31 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import com.itsigned.huqariq.R
 import com.itsigned.huqariq.activity.GetFormDataStepperAction
 import com.itsigned.huqariq.dialog.PlayAudioDialog
 import com.itsigned.huqariq.helper.PermissionHelper
 import com.itsigned.huqariq.helper.REQUEST_PERMISION_PLAY_AUDIO
+import com.itsigned.huqariq.helper.getLoadingProgress
+import com.itsigned.huqariq.model.FormDialectAnswer
 import com.itsigned.huqariq.model.FormRegisterStepThreeDto
-import com.stepstone.stepper.Step
+import com.itsigned.huqariq.serviceclient.RafiServiceWrapper
+import com.stepstone.stepper.BlockingStep
+import com.stepstone.stepper.StepperLayout
 import com.stepstone.stepper.VerificationError
 import kotlinx.android.synthetic.main.fragment_step_three.*
+import java.util.*
 
 
-class StepThreeFragment : Fragment() , Step {
+class StepThreeFragment : Fragment() , BlockingStep {
 
     var action: GetFormDataStepperAction?=null
-    var quantitySuccessChanka=0
-    var quantitySuccessQullawA=0
-    var quantitySuccessQullawB=0
+    lateinit var customProgressDialog: Dialog
+
     var idDialec=-1
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -84,16 +87,62 @@ class StepThreeFragment : Fragment() , Step {
         dialog.show(activity!!.supportFragmentManager,"")
     }
 
+    override fun onBackClicked(callback: StepperLayout.OnBackClickedCallback?) {
+
+    }
+
+
     override fun onSelected() {}
+    override fun onCompleteClicked(callback: StepperLayout.OnCompleteClickedCallback?) {}
+
+    @UiThread
+    override fun onNextClicked(callback: StepperLayout.OnNextClickedCallback?) {
+        Log.d("StepThree","on next")
+      //  callback!!.stepperLayout.showProgress("sss")
+        var listAnswer =arrayOf(
+                convertCodeAnswerToString(radioGroupQuestionOne.checkedRadioButtonId),
+                convertCodeAnswerToString(radioGroupQuestionTwo.checkedRadioButtonId),
+                convertCodeAnswerToString(radioGroupQuestionThree.checkedRadioButtonId),
+                convertCodeAnswerToString(radioGroupQuestionFour.checkedRadioButtonId),
+                convertCodeAnswerToString(radioGroupQuestionFive.checkedRadioButtonId)
+        )
+        customProgressDialog=getLoadingProgress()
+        customProgressDialog.show()
+        RafiServiceWrapper.validateDialectAnswer(context!!, FormDialectAnswer(listAnswer),
+                {x->
+                    idDialec = if (x.dialecto.toUpperCase(Locale.ROOT)=="CHANCA") 1
+                    else ( if(x.dialecto.toUpperCase(Locale.ROOT) == "COLLAO") 2 else -1)
+                    customProgressDialog.dismiss()
+                    val form=getForm()
+                    action!!.setDataFormSteperThree(form)
+                    if(idDialec==-1){
+                        Toast.makeText(context!!,R.string.message_error_question,Toast.LENGTH_LONG).show()
+                    }else{
+                        callback!!.goToNextStep();
+                    }
+                },{
+            Toast.makeText(context!!,R.string.default_error_server,Toast.LENGTH_LONG).show()
+            customProgressDialog.dismiss()
+
+        })
+    }
+
+    fun convertCodeAnswerToString(code:Int):String{
+        return when(code){
+            0->"a"
+            1->"b"
+            2->"c"
+            3->"d"
+            4->"e"
+            else->""
+        }
+    }
 
     override fun verifyStep(): VerificationError? {
-        val validForm=validateStepTwoRegister()
-        val form=getForm()
-        action!!.setDataFormSteperThree(form)
-        if(validForm)return null
-        Toast.makeText(context!!,R.string.message_error_question,Toast.LENGTH_LONG).show()
-        return VerificationError("")
+        return null
+
     }
+
 
     override fun onError(error: VerificationError) {}
 
@@ -102,37 +151,7 @@ class StepThreeFragment : Fragment() , Step {
         return FormRegisterStepThreeDto(idDialec.toString())
     }
 
-    fun validateStepTwoRegister():Boolean {
 
-        val listResponse=arrayOf(
-                radioGroupQuestionOne.checkedRadioButtonId,
-                radioGroupQuestionTwo.checkedRadioButtonId,
-                radioGroupQuestionThree.checkedRadioButtonId,
-                radioGroupQuestionFour.checkedRadioButtonId,
-                radioGroupQuestionFive.checkedRadioButtonId
-        )
-        val listResponseChanca= arrayOf(0,0,4,0,1)
-        val listResponseQullaA= arrayOf(1,2,1,4,0)
-        val listResponseQullaB= arrayOf(3,2,1,4,0)
-
-        quantitySuccessChanka=0
-        quantitySuccessQullawA=0
-        quantitySuccessQullawB=0
-        for (i in 0..listResponse.size-1){
-            if(listResponseChanca[i]==listResponse[i])quantitySuccessChanka++
-            if(listResponseQullaA[i]==listResponse[i])quantitySuccessQullawA++
-            if(listResponseQullaB[i]==listResponse[i])quantitySuccessQullawB++
-
-        }
-
-        Log.d("success chancha","success chancha ${quantitySuccessChanka}")
-        Log.d("success Qullaw A","success chancha ${quantitySuccessQullawA}")
-        Log.d("success Qullaw B","success chancha ${quantitySuccessQullawB}")
-
-        if(quantitySuccessChanka<4 && quantitySuccessQullawA<4 && quantitySuccessQullawB<4)return false
-        idDialec= if(quantitySuccessQullawA>2 || quantitySuccessQullawB>2) 2 else 1
-        return true
-    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if(requestCode== REQUEST_PERMISION_PLAY_AUDIO){

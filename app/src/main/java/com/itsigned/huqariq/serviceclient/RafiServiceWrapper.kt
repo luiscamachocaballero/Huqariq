@@ -115,6 +115,38 @@ class RafiServiceWrapper {
                     )
         }
 
+        fun validateDialectByRegion(context: Context, body: FormDialectRegion, onSuccess: (success: ResponseDialectRegion) -> Unit, onError: (error: String) -> Unit) {
+            val apiService = RafiService.create()
+            Log.d(TAG,"execute service validateDialectByRegion whith")
+            Log.d(TAG,body.toString())
+            apiService.validateDialectByRegion(body)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(
+                            { result -> onSuccess(result) },
+                            { error ->
+                                Log.d(TAG,"error validate register")
+                                error.printStackTrace()
+                                onError(context.getString(R.string.generic_error)) }
+                    )
+        }
+
+        fun validateDialectAnswer(context: Context, body: FormDialectAnswer, onSuccess: (success: ResponseDialectAnswer) -> Unit, onError: (error: String) -> Unit) {
+            val apiService = RafiService.create()
+            Log.d(TAG,"execute service validateDialectAnswer whith")
+            Log.d(TAG,body.toString())
+            apiService.validateAnswerDialecto(body)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(
+                            { result -> onSuccess(result) },
+                            { error ->
+                                Log.d(TAG,"error validate validateDialectAnswer")
+                                error.printStackTrace()
+                                onError(context.getString(R.string.generic_error)) }
+                    )
+        }
+
         /**
          * Metodo para invocar al servicio de validación de correo
          * @param context contexto de la aplicacion

@@ -30,6 +30,14 @@ fun FragmentActivity.getLoadingProgress(idLayout:Int=R.layout.dialog_custom_prog
     return customDialog.create()
 }
 
+fun Fragment.getLoadingProgress(idLayout:Int=R.layout.dialog_custom_progress): Dialog {
+    val customDialog = AlertDialog.Builder(context)
+    val viewDialog =  layoutInflater.inflate(idLayout, null)
+    customDialog.setView(viewDialog)
+    customDialog.setCancelable(false)
+    return customDialog.create()
+}
+
 fun Fragment.setErrorEditText(editText: EditText, idString:Int){
     editText.error=getString(idString)
     editText.isFocusable=true

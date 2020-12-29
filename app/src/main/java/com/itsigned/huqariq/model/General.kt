@@ -77,3 +77,23 @@ data class FormRegisterUserStepTwoDto(
 data class FormRegisterStepThreeDto(
        var idDialect:String
 )
+
+data class FormDialectRegion(
+        var departamento:String,
+        var provincia:String,
+        var distrito:String
+)
+
+data class FormDialectAnswer(
+        var respuesta:Array<String>
+
+)
+
+
+data class ResponseDialectRegion(
+        var dialecto:String
+)
+
+data class ResponseDialectAnswer(
+        var dialecto:String
+)
