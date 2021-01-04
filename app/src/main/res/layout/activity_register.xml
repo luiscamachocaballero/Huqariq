@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
-
-    <com.stepstone.stepper.StepperLayout
-    android:id="@+id/stepperLayout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
 
-        app:ms_stepperFeedbackType="tabs|content_progress|disabled_bottom_navigation"
-    app:ms_showBottomNavigation="true"
-    android:gravity="center_horizontal"
-    android:layout_gravity="bottom"
-    android:layout_weight="0"
-        app:ms_tabStepDividerWidth="35dp"
-        app:ms_tabNavigationEnabled="false"
+    <include
+        android:layout_marginTop="@dimen/normal_space"
+        android:id="@+id/stepper"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        layout="@layout/stepper_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+    </include>
+    <FrameLayout
+        app:layout_constraintTop_toBottomOf="@+id/stepper"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/fooFragment"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/bottonera"
+        android:layout_height="0dp" />
 
-    app:ms_stepperType="tabs"
-    app:ms_nextButtonText="@string/view_register_next_button"
-    app:ms_backButtonText=""
-    app:ms_completeButtonText="@string/view_register_complete_buttom"
-    app:ms_showBackButtonOnFirstStep="false"
-
-    />
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/bottonera"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_gravity="bottom"
+       android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/buttonNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next_record"
+            android:layout_gravity="end"
+            android:textColor="@color/black"
+            android:padding="@dimen/normal_space"
+            android:layout_marginEnd="@dimen/normal_space"
+            />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 

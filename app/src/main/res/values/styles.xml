@@ -29,5 +29,10 @@
         <item name="android:windowBackground">@color/white</item>
     </style>
 
+    <style name="MSBottomNavigation">
+        <item name="android:layout_height">@dimen/ms_bottom_navigation_bar_height</item>
+        <item name="android:background">@color/ms_bottomNavigationBackgroundColor</item>
+    </style>
+
 
 </resources>

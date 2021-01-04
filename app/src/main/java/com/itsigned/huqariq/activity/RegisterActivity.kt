@@ -1,18 +1,19 @@
 package com.itsigned.huqariq.activity
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
-import android.util.SparseArray
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.itsigned.huqariq.R
-import com.itsigned.huqariq.adapter.MyStepperAdapter
 import com.itsigned.huqariq.bean.User
+import com.itsigned.huqariq.fragment.*
 import com.itsigned.huqariq.helper.getLoadingProgress
 import com.itsigned.huqariq.helper.goToActivity
 import com.itsigned.huqariq.mapper.GeneralMapper
@@ -23,13 +24,9 @@ import com.itsigned.huqariq.model.LoginRequestDto
 import com.itsigned.huqariq.serviceclient.RafiServiceWrapper
 import com.itsigned.huqariq.util.Util
 import com.itsigned.huqariq.util.session.SessionManager
-import com.stepstone.stepper.StepperLayout
-import com.stepstone.stepper.VerificationError
-import com.stepstone.stepper.internal.widget.TabsContainer
-import com.stepstone.stepper.viewmodel.StepViewModel
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.stepper_header.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 const val STATUS_NUMBERDOCUMENT_NOT_CALL_SERVICE=0
@@ -38,19 +35,20 @@ const val STATUS_NUMBERDOCUMENT_RED=2
 const val STATUS_NUMBERDOCUMENT_LOADING=3
 
 
-class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction, StepperLayout.StepperListener {
+class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction {
 
 
-    private var statusNumberDocument:Int=0
+    private var countTabs=4
+    private var position=0
 
-    lateinit var customProgressDialog: Dialog
+    private lateinit var customProgressDialog: Dialog
 
     private val mapValues=HashMap<String,String>()
-    private var stepPosition=0
 
     private var formRegisterUserStepOneDto:FormRegisterUserStepOneDto?=null
     private var formRegisterUserStepTwoDto:FormRegisterUserStepTwoDto?=null
     private var formRegisterUserStepThreeDto:FormRegisterStepThreeDto?=null
+    private  var currentFragment:Fragment?=null
 
     /**
      * Metodo para la creación de activitys
@@ -59,19 +57,88 @@ class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction, StepperLa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-//        setupToolbar()
-
         customProgressDialog=getLoadingProgress()
         if(intent.extras!=null&&intent.extras!!.containsKey("email")){
             mapValues["email"]=intent.getStringExtra("email")
         }
-        stepperLayout.adapter= MyStepperAdapter(supportFragmentManager, this,this)
-        stepperLayout.findViewById<View>(R.id.ms_stepPrevButton).visibility=View.GONE
-        stepperLayout.setListener(this)
-       // stepperLayout.bac
-        stepperLayout.onBackClicked()
+        transaction()
+        buttonNext.setOnClickListener { (currentFragment as StepFragment).verifyStep() }
+
+    }
 
 
+
+    private fun updateStepper(){
+        if(countTabs==3){
+            stepFour.visibility=View.GONE
+        }
+        val sdk = android.os.Build.VERSION.SDK_INT
+        val view=getViewStep()
+        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.circle) )
+        } else {
+            view.background = ContextCompat.getDrawable(this, R.drawable.circle)
+        }
+        if(position==3){
+            buttonNext.text = getString(R.string.view_register_complete_buttom)
+        }
+
+        if(position==2 && countTabs==3){
+            buttonNext.text = getString(R.string.view_register_complete_buttom)
+        }
+
+    }
+
+    private fun getViewStep():View{
+        return when(position){
+            1 ->stepOne
+            2 ->stepTwo
+            3 ->stepThre
+            4 ->stepFour
+            else ->throw Exception("out limit step")
+
+        }
+    }
+
+    private fun transaction(){
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        currentFragment=createStep(position)
+        ft.replace(R.id.fooFragment, currentFragment!!)
+        ft.commit()
+    }
+
+    private fun createStep(position: Int): StepFragment {
+
+        when(true){
+
+            position== 0->{val step=StepOneFragment()
+                step.action=this
+                return step
+            }
+            position== 1->{val step= StepTwoFragment()
+                step.action=this
+                return step
+            }
+
+            position== 2 && countTabs==3->{
+                val step= StepFourFragment()
+                step.action=this
+                return step
+            }
+            position== 2 &&countTabs==4->{val step= StepThreeFragment()
+                step.action=this
+                return step
+            }
+
+
+            position== 3->{val step= StepFourFragment()
+                step.action=this
+                return step
+            }
+
+
+            else->{throw Exception("out limit step")}
+        }
     }
 
 
@@ -171,42 +238,30 @@ class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction, StepperLa
 
 
 
-    override fun onStepSelected(newStepPosition: Int) {
-        this.stepPosition=newStepPosition
-        stepperLayout.findViewById<View>(R.id.ms_stepPrevButton).visibility=View.GONE
 
-    }
-
-    override fun onError(verificationError: VerificationError?) {
-    }
-
-    override fun onReturn() {
-    }
-
-    override fun onCompleted(completeButton: View?) {
-        registrar()
-    }
 
     override fun getValues(): HashMap<String, String> {
         return mapValues
     }
 
     override fun changeQuantityTab(quantity: Int) {
-        (stepperLayout.adapter as MyStepperAdapter).changeCount(quantity)
-        updateTabContainer(quantity)
+        this.countTabs=quantity
     }
 
-    @SuppressLint("RestrictedApi")
-    private fun updateTabContainer(quantity: Int){
-        val tabContainer=stepperLayout.findViewById(R.id.ms_stepTabsContainer) as TabsContainer
-        val list=ArrayList<StepViewModel>()
-        for (i in 1..quantity){list.add(StepViewModel.Builder(this).create())}
-        tabContainer.setSteps(list)
-        tabContainer.performClick()
-        stepperLayout.setShowBottomNavigation(true)
-        val error= SparseArray<VerificationError>()
-        tabContainer.updateSteps(stepperLayout.currentStepPosition,error,false)
+    override fun goNextStep() {
+        position++
+        updateStepper()
+        if(position==countTabs){
+            registrar()
+            return
+        }
+        transaction()
+    }
 
+    override fun enabledNext(value:Boolean) {
+        if(!value)buttonNext.setText("Cargando...")
+        if(value)buttonNext.setText("Siguiente")
+        buttonNext.setEnabled(value)
     }
 
 
@@ -230,5 +285,8 @@ interface GetFormDataStepperAction{
     fun setDataFormSteperThree(form:FormRegisterStepThreeDto)
     fun getValues():HashMap<String,String>
     fun changeQuantityTab(quantity:Int)
+    fun goNextStep()
+    fun enabledNext(value:Boolean)
 
 }
+

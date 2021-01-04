@@ -2,8 +2,6 @@ package com.itsigned.huqariq.fragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +18,6 @@ import com.itsigned.huqariq.model.FormDialectRegion
 import com.itsigned.huqariq.model.FormRegisterStepThreeDto
 import com.itsigned.huqariq.model.FormRegisterUserStepTwoDto
 import com.itsigned.huqariq.serviceclient.RafiServiceWrapper
-import com.stepstone.stepper.Step
-import com.stepstone.stepper.VerificationError
 import kotlinx.android.synthetic.main.fragment_step_two.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -40,7 +36,7 @@ private var idDistrito: String? = null
 
 private var ubigeoSelected:Ubigeo?=null
 
-class StepTwoFragment : Fragment() , Step {
+class StepTwoFragment : StepFragment()  {
     var action: GetFormDataStepperAction?=null
     lateinit var customProgressDialog: Dialog
 
@@ -162,26 +158,16 @@ class StepTwoFragment : Fragment() , Step {
          */
     }
 
-    private fun isSouth():Boolean{
-        val listRegionSouth= arrayListOf<String>("Apurimac","Ayacucho","Arequipa","Cusco","Puno",
-                "Tacna","Moquegua", "Huancavelica")
-        val regionFind:String?=listRegionSouth.find { x->x.toUpperCase(Locale.ROOT).equals(departamento!!.toUpperCase(Locale.ROOT)) }
-        if(regionFind!=null)return true
-        return false
-    }
 
-    override fun onSelected() {}
 
-    override fun verifyStep(): VerificationError? {
+
+    override fun verifyStep() {
         val validForm=validateStepTwoRegister()
         val form=getForm()
         action!!.setDataFormSteperTwo(form)
-        if(validForm)return null
-
-        return VerificationError("")
+        if(validForm)action!!.goNextStep()
     }
 
-    override fun onError(error: VerificationError) {}
 
 
     private fun getForm(): FormRegisterUserStepTwoDto {

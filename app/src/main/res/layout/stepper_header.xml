@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/stepOne"
+        android:layout_margin="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        android:background="@drawable/circle_inactive"
+        android:gravity="center"
+        android:shadowColor="@android:color/white"
+        android:shadowRadius="10.0"
+        android:text="1"
+        android:textColor="@color/white"
+   />
+
+    <TextView
+        android:id="@+id/stepTwo"
+        android:layout_margin="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        android:background="@drawable/circle_inactive"
+        android:gravity="center"
+        android:shadowColor="@android:color/white"
+        android:shadowRadius="10.0"
+        android:text="2"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/stepThre"
+
+        android:layout_margin="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        android:background="@drawable/circle_inactive"
+        android:gravity="center"
+        android:shadowColor="@android:color/white"
+        android:shadowRadius="10.0"
+        android:text="3"
+        android:textColor="@color/white"
+         />
+
+    <TextView
+        android:id="@+id/stepFour"
+        android:layout_margin="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        android:background="@drawable/circle_inactive"
+        android:gravity="center"
+        android:shadowColor="@android:color/white"
+        android:shadowRadius="10.0"
+        android:text="4"
+        android:textColor="@color/white"
+
+
+        />
+
+</LinearLayout>

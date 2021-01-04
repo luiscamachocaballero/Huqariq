@@ -1,6 +1,8 @@
 package com.itsigned.huqariq.fragment
 
+import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -10,8 +12,6 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
-import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import com.itsigned.huqariq.R
 import com.itsigned.huqariq.activity.GetFormDataStepperAction
 import com.itsigned.huqariq.dialog.PlayAudioDialog
@@ -21,14 +21,11 @@ import com.itsigned.huqariq.helper.getLoadingProgress
 import com.itsigned.huqariq.model.FormDialectAnswer
 import com.itsigned.huqariq.model.FormRegisterStepThreeDto
 import com.itsigned.huqariq.serviceclient.RafiServiceWrapper
-import com.stepstone.stepper.BlockingStep
-import com.stepstone.stepper.StepperLayout
-import com.stepstone.stepper.VerificationError
 import kotlinx.android.synthetic.main.fragment_step_three.*
 import java.util.*
 
 
-class StepThreeFragment : Fragment() , BlockingStep {
+class StepThreeFragment : StepFragment()  {
 
     var action: GetFormDataStepperAction?=null
     lateinit var customProgressDialog: Dialog
@@ -87,18 +84,25 @@ class StepThreeFragment : Fragment() , BlockingStep {
         dialog.show(activity!!.supportFragmentManager,"")
     }
 
-    override fun onBackClicked(callback: StepperLayout.OnBackClickedCallback?) {
 
+
+
+
+
+
+    fun convertCodeAnswerToString(code:Int):String{
+        return when(code){
+            0->"a"
+            1->"b"
+            2->"c"
+            3->"d"
+            4->"e"
+            else->""
+        }
     }
 
-
-    override fun onSelected() {}
-    override fun onCompleteClicked(callback: StepperLayout.OnCompleteClickedCallback?) {}
-
-    @UiThread
-    override fun onNextClicked(callback: StepperLayout.OnNextClickedCallback?) {
+    override fun verifyStep() {
         Log.d("StepThree","on next")
-      //  callback!!.stepperLayout.showProgress("sss")
         var listAnswer =arrayOf(
                 convertCodeAnswerToString(radioGroupQuestionOne.checkedRadioButtonId),
                 convertCodeAnswerToString(radioGroupQuestionTwo.checkedRadioButtonId),
@@ -116,35 +120,33 @@ class StepThreeFragment : Fragment() , BlockingStep {
                     val form=getForm()
                     action!!.setDataFormSteperThree(form)
                     if(idDialec==-1){
-                        Toast.makeText(context!!,R.string.message_error_question,Toast.LENGTH_LONG).show()
+                       // val a=Toast.makeText(context!!,R.string.message_error_question,Toast.LENGTH_LONG)
+
+                        val builder = AlertDialog.Builder(activity!!)
+                        builder.setMessage(R.string.message_error_question)
+                                .setPositiveButton(R.string.dialog_acept,
+                                        DialogInterface.OnClickListener { dialog, id ->
+                                            dialog.dismiss()
+                                            activity!!.finish()
+                                        })
+
+                        // Create the AlertDialog object and return it
+                       val d= builder.create()
+                        d.setCancelable(false)
+                        d.show()
+
                     }else{
-                        callback!!.goToNextStep();
+                        this.action!!.goNextStep();
                     }
                 },{
             Toast.makeText(context!!,R.string.default_error_server,Toast.LENGTH_LONG).show()
             customProgressDialog.dismiss()
 
         })
-    }
-
-    fun convertCodeAnswerToString(code:Int):String{
-        return when(code){
-            0->"a"
-            1->"b"
-            2->"c"
-            3->"d"
-            4->"e"
-            else->""
-        }
-    }
-
-    override fun verifyStep(): VerificationError? {
-        return null
 
     }
 
 
-    override fun onError(error: VerificationError) {}
 
 
     private fun getForm(): FormRegisterStepThreeDto {

@@ -17,7 +17,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Escucha las siguientes preguntas y respondelas"
+                android:text="Escucha las siguientes preguntas y respondelas, recuerda que solo tienes una oportunidad"
                 android:layout_marginBottom="@dimen/normal_space"
                 />
 

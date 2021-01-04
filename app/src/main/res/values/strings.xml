@@ -49,6 +49,7 @@
     <string name="register_select_district">Debe seleccionar un Distrito</string>
 
     <string name="dialog_close">Cerrar</string>
+    <string name="dialog_acept">Aceptar</string>
 
     <string name="message_ya_registrado">ya registrado</string>
     <string name="registro_message_error_campo_vacio">No puede dejar este campo vacío</string>

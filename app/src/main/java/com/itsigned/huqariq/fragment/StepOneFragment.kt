@@ -28,7 +28,7 @@ const val STATUS_MAIL_GREEN=1
 const val STATUS_MAIL_RED=2
 const val STATUS_MAIL_LOADING=3
 
-class StepOneFragment : Fragment(), Step {
+class StepOneFragment : StepFragment() {
 
 
     private var statusMail: Int=0
@@ -57,6 +57,7 @@ class StepOneFragment : Fragment(), Step {
     }
 
     private fun validMail(mail:String){
+
         if (!ValidationHelper.validateMail(mail)) {
             ViewHelper.showOneView(errorMailImageView,validMailStatusFrame)
             statusMail= STATUS_MAIL_RED
@@ -64,11 +65,16 @@ class StepOneFragment : Fragment(), Step {
             return
         }
         statusMail= STATUS_MAIL_LOADING
+        action!!.enabledNext(false)
         ViewHelper.showOneView(loadServiceMailProgress,validMailStatusFrame)
         RafiServiceWrapper.verifyMail(context!!, RequestValidateMail(mail),
-                { success ->evaluateVerificationServerMail(success)
+                { success ->
+                    evaluateVerificationServerMail(success)
+                    updateButtonNextForLoading()
+
                 },
                 {
+
                     statusMail= STATUS_MAIL_NOT_CALL_SERVICE
                     showMessage(getString(R.string.default_error_server))
                 }
@@ -83,9 +89,13 @@ class StepOneFragment : Fragment(), Step {
             return
         }
         statusNumberDocument= STATUS_NUMBERDOCUMENT_LOADING
+        action!!.enabledNext(false)
+
         ViewHelper.showOneView(loadServiceNumberDocumentProgress,validNumberDocumentStatusFrame)
         RafiServiceWrapper.validateDni(context!!, RequestValidateDni(etDni.text.toString()),
-                { success ->evaluateDni(success) },
+                { success ->evaluateDni(success)
+                    updateButtonNextForLoading()
+                },
                 {
                     statusNumberDocument= STATUS_NUMBERDOCUMENT_NOT_CALL_SERVICE
                     showMessage(getString(R.string.default_error_server))
@@ -111,13 +121,21 @@ class StepOneFragment : Fragment(), Step {
 
     private fun evaluateVerificationServerMail(verification: String) {
         statusMail = if (verification.toUpperCase(Locale.ROOT)=="OK"){
+            updateButtonNextForLoading()
             ViewHelper.showOneView(checkMailImageView,validMailStatusFrame)
             STATUS_MAIL_GREEN
         }else {
+            updateButtonNextForLoading()
             ViewHelper.showOneView(errorMailImageView,validMailStatusFrame)
             showMessage(getString(R.string.view_form_register_step_one_message_mail_in_use))
            STATUS_MAIL_RED
         }
+    }
+
+    fun updateButtonNextForLoading(){
+       if(statusMail!=STATUS_MAIL_LOADING && statusNumberDocument!= STATUS_NUMBERDOCUMENT_LOADING){
+           action!!.enabledNext(true)
+       }
     }
 
     private fun showErrorMail() {setErrorEditText(mailEditText,R.string.registro_message_error_ingrese_correo_electronico) }
@@ -132,17 +150,14 @@ class StepOneFragment : Fragment(), Step {
 
     private fun showMessage(message: String) {if(isVisible) Toast.makeText(context,message, Toast.LENGTH_LONG).show()}
 
-    override fun onSelected() {}
 
-    override fun verifyStep(): VerificationError? {
+    override fun verifyStep() {
         val form=getForm()
         action!!.setDataFormSteperOne(form)
         val validForm=validateStepOneRegister(form,statusMail)
-        if(validForm)return null
-        return VerificationError("")
+        if(validForm)return action!!.goNextStep()
     }
 
-    override fun onError(error: VerificationError) {}
 
 
     private fun getForm(): FormRegisterUserStepOneDto {

@@ -18,32 +18,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import androidx.fragment.app.Fragment
 import com.itsigned.huqariq.R
 import com.itsigned.huqariq.activity.GetFormDataStepperAction
 import com.itsigned.huqariq.activity.MainActivity
 import com.itsigned.huqariq.dialog.PlayAudioDialog
-import com.itsigned.huqariq.helper.SystemFileHelper
 import com.itsigned.huqariq.util.Consentiment
 import com.itsigned.huqariq.util.Util
-import com.stepstone.stepper.Step
-import com.stepstone.stepper.VerificationError
 import kotlinx.android.synthetic.main.fragment_step_four.*
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 import java.util.*
 
 
-class StepFourFragment : Fragment() , Step {
+class StepFourFragment : StepFragment() {
 
     var action: GetFormDataStepperAction?=null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -53,9 +45,9 @@ class StepFourFragment : Fragment() , Step {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            confirmationText.setText(Html.fromHtml(Consentiment.CONSENTIMENT_TEXT, Html.FROM_HTML_MODE_COMPACT));
+            confirmationText.text = Html.fromHtml(Consentiment.CONSENTIMENT_TEXT, Html.FROM_HTML_MODE_COMPACT)
         } else {
-            confirmationText.setText(Html.fromHtml(Consentiment.CONSENTIMENT_TEXT));
+            confirmationText.text = Html.fromHtml(Consentiment.CONSENTIMENT_TEXT)
         }
         downloadButton.setOnClickListener {
             hackDisabled()
@@ -64,11 +56,10 @@ class StepFourFragment : Fragment() , Step {
         }
 
         playButton.setOnClickListener {
-            val dialog= PlayAudioDialog(R.raw.consentimientoaudio,"Presione play para escuchar elConsentimiento Informado")
+            val dialog= PlayAudioDialog(R.raw.consentimientoaudio,"Presione play para escuchar el Consentimiento Informado")
             dialog.isCancelable=false
             dialog.show(activity!!.supportFragmentManager,"")
         }
-        aceptConsentimentCheckBox.setOnClickListener { aceptConsentimentCheckBox.error=null }
 
     }
 
@@ -123,23 +114,20 @@ class StepFourFragment : Fragment() , Step {
         return  intent
     }
 
-    override fun onSelected() {
 
-    }
 
-    override fun verifyStep(): VerificationError? {
-        if(aceptConsentimentCheckBox.isChecked)return null
+    override fun verifyStep() {
+        aceptConsentimentCheckBox.error=null
+        if(aceptConsentimentCheckBox.isChecked)this.action!!.goNextStep()
         //Toast.makeText(context!!,"Debe Aceptar el Consentimiento para Continuar",Toast.LENGTH_LONG).show()
         aceptConsentimentCheckBox.isFocusable=true
         aceptConsentimentCheckBox.requestFocus()
         aceptConsentimentCheckBox.setError("Debe Aceptar el Consentimiento para continuar")
-        return VerificationError("")
     }
 
-    override fun onError(error: VerificationError) {
-    }
 
-    fun hackDisabled() {
+
+    private fun hackDisabled() {
         if (Build.VERSION.SDK_INT >= 24) {
             try {
                 val m = StrictMode::class.java.getMethod("disableDeathOnFileUriExposure")
