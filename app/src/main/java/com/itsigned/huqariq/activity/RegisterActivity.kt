@@ -69,6 +69,8 @@ class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction {
 
 
     private fun updateStepper(){
+        if(position>countTabs)return
+
         if(countTabs==3){
             stepFour.visibility=View.GONE
         }
@@ -101,6 +103,7 @@ class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction {
     }
 
     private fun transaction(){
+        if(position>countTabs)return
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         currentFragment=createStep(position)
         ft.replace(R.id.fooFragment, currentFragment!!)
@@ -251,11 +254,17 @@ class RegisterActivity : AppCompatActivity(),GetFormDataStepperAction {
     override fun goNextStep() {
         position++
         updateStepper()
-        if(position==countTabs){
+        if(position>=countTabs){
             registrar()
             return
+        }else{
+            transaction()
         }
-        transaction()
+
+
+
+
+
     }
 
     override fun enabledNext(value:Boolean) {

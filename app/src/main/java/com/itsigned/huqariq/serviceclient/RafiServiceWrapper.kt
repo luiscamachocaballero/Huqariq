@@ -10,6 +10,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.HttpException
+import java.lang.Exception
 
 const val TAG = "RafiServiceWrapper"
 const val CONTENT_TYPE_JSON="application/json"
@@ -38,9 +40,18 @@ class RafiServiceWrapper {
                     .subscribe(
                             { result -> onSuccess(result) },
                             { error ->
-                                Log.d(TAG,"error loginUser")
+                                Log.d(TAG, "error loginUser")
                                 error.printStackTrace()
-                                onError(context.getString(R.string.generic_error)) }
+
+                                if ((error as HttpException).code() == 400) {
+                                    onError(context.getString(R.string.error_login))
+                                } else {
+                                    onError(context.getString(R.string.generic_error))
+                                }
+
+
+                            }
+
                     )
         }
 
@@ -85,7 +96,7 @@ class RafiServiceWrapper {
                             { error ->
                                 Log.d(TAG,"error register user")
                                 error.printStackTrace()
-                                onError(context.getString(R.string.generic_error)) }
+                                onError(context.getString(R.string.error_register)) }
                     )
         }
 

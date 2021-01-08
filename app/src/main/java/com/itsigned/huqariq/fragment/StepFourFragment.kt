@@ -118,11 +118,15 @@ class StepFourFragment : StepFragment() {
 
     override fun verifyStep() {
         aceptConsentimentCheckBox.error=null
-        if(aceptConsentimentCheckBox.isChecked)this.action!!.goNextStep()
-        //Toast.makeText(context!!,"Debe Aceptar el Consentimiento para Continuar",Toast.LENGTH_LONG).show()
-        aceptConsentimentCheckBox.isFocusable=true
-        aceptConsentimentCheckBox.requestFocus()
-        aceptConsentimentCheckBox.setError("Debe Aceptar el Consentimiento para continuar")
+        if(aceptConsentimentCheckBox.isChecked){
+            this.action!!.goNextStep()
+        }
+        else{
+            aceptConsentimentCheckBox.isFocusable=true
+            aceptConsentimentCheckBox.requestFocus()
+            aceptConsentimentCheckBox.setError("Debe Aceptar el Consentimiento para continuar")
+        }
+
     }
 
 

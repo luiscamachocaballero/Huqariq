@@ -60,6 +60,8 @@
     <string name="no_internet">No se encuentra conectado a internet, por favor revise su conexión y vuelva a intentarlo.</string>
     <string name="generic_error">Lo sentimos no hemos podido realizar su petición. Por favor inténtelo otra vez en unos minutos</string>
     <string name="login_facebook_error">Lo sentimos no hemos podido crear su cuenta usando Facebook. Por favor inténtelo otra vez en unos minutos</string>
+    <string name="error_login">Usuario o Contraseña Erroneos</string>
+    <string name="error_register">Los datos ingresados ya fueron previamente registrados</string>
 
     <string name="edit_text_hint_name">Nombres</string>
     <string name="edit_text_hint_surname">Apellidos</string>
@@ -105,7 +107,9 @@
     <string name="download_consentiment">Descargar</string>
     <string name="play_consentiment">Escuchar</string>
 
-    <string name="message_error_question">Lamentablemente usted no ha respondido correctamente varias de las preguntas realizadas, usted no puede continuar, lo animamos que registre a una persona Quechuahablante</string>
+    <string name="message_error_question">
+Lamentablemente usted no ha respondido correctamente varias de las preguntas realizadas, usted no puede continuar. Pero no se desanime, usted aún puede ayudarnos, le animamos a que registre a una persona quechuahablante, ¡MIL Gracias!
+    </string>
 
 </resources>
 
